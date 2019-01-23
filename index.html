@@ -97,9 +97,12 @@ h2, .acc {
 .acc, .acc-amt {
     display:inline;
     position:relative;
-    left: 5px;
-    padding: 5px;
+    left: 1px;
+    padding: 2px;
     font-size: 16px;
+}
+.acc-amt {
+    color: #0000AA;
 }
 .pict {
    display: inline-block;
@@ -109,21 +112,23 @@ h2, .acc {
 </head>
 <body>
 <h2>Money Creation</h2>
+(instructions at the bottom)<br>
 <input id=ask-loan type=button value="Ask for a Loan">
-<input id=invest-ico type=button value="Invest in ICO">
+<input id=invest-ico type=button value="Buy Tokens">
 <input id=mine-bitcoin type=button value="Mine Bitcoin">
 <input id=buy-bitcoin type=button value="Buy Bitcoin">
 <P>
+
 <div class=acc>I Have in Bank:<div id=i-have-b class=acc-amt>0</div>
-- I have in Bitcoins:<div id=i-have-c class=acc-amt>0</div>
-- I have in ico:<div id=i-have-i class=acc-amt>0</div>
+ in Bitcoins:<div id=i-have-c class=acc-amt>0</div>
+ in Tokens:<div id=i-have-i class=acc-amt>0</div>
 </div>
 <br>
 <div class=acc>I Owe to Bank:<div id=i-owe class=acc-amt>0</div>
 </div>
 <br>
 <div class=acc>Others have in Bitcoins:<div id=o-have-c class=acc-amt>0</div>
-- Others have in Bank<div id=o-have-b class=acc-amt>0</div>
+ in Bank<div id=o-have-b class=acc-amt>0</div>
 </div>
 
 <div class="container" >
@@ -161,8 +166,17 @@ h2, .acc {
           <div style="Color: white;" id=cliabilities>0</div>
       </div>
   </div>
-
 </div>
+<pre>
+INSTRUCTIONS:
+System starts with 1000 USD equivalent of Bitcoins in the Blockchain
+The bank has initial deposits for value of 100 USD
+We start with no money, the 100USD in the bank and the 1000USD in
+ bitcoins belong to others
 
+Participation in ICO is done using fiat from the bank
+Loans, mining and investment are for an amount of 100 USD (equivalent in value)
+Cost of mining bitcoins is 95 USD (for an amount of BTC equiv to 100 USD)
+</pre>
 </body>
 </html>
