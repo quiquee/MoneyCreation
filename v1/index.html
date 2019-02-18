@@ -39,21 +39,35 @@
               $('#cliabilities').text(btcamount);
           }
           $('#ask-loan').click( function() {
+            // bamount: Money in my current account
+            // bsamount: Money in the bank
+            // debt: money I owe
               bamount=bamount+100;
               bsamount=bsamount+100;
               debt=debt+100;
               showamounts();
           })
           $('#invest-ico').click( function() {
+            // iamount: the amount in dollars of the tokens I have
+            // bamount: Money in my current account
+            // bsamount: Money in the bank
               iamount=iamount+100;
+              bsamount=bsamount-100;
               bamount=bamount-100;
               showamounts();
           })
           $('#buy-bitcoin').click( function() {
+            // camount: the amount of crypto I have
+            // bamount: Money in my current account
               camount=camount+100;
+              bamount=bamount-100;
               showamounts();
           })
           $('#mine-bitcoin').click( function() {
+            // camount: amount of bitcoins I have in dollars
+            // btcamount: total amount of bitcoins in dollars
+            // bamount: Money in my current account
+            // bsamount: Money in the bank
               camount=camount+100;
               btcamount=btcamount+100;
               bamount=bamount-miningcost;
