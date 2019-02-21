@@ -12,13 +12,13 @@ export default new Vuex.Store({
   },
   mutations: {
     gl(state, payload) {
-      if( isNaN(state[payload.gl][payload.credit])){
+      if( isNaN(state[paload.credit])){
         state[payload.gl][payload.credit]=0;
       }
       if( isNaN(state[payload.gl][payload.debit])){
         state[payload.gl][payload.debit]=0;
       }
-      state[payload.gl][payload.credit]+=payload.amount;
+      state[payload.gd.credit]+=payload.amount;
       state[payload.gl][payload.debit]-=payload.amount;
     }
   },
