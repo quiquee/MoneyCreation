@@ -146,7 +146,7 @@ export default {
   *display: inline;
   vertical-align: top;
   text-align: left;
-  font-size: 12px;
+  font-size: 14px;
   width: 200px;
 }
 </style>

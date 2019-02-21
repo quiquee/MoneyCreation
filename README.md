@@ -1,5 +1,5 @@
 # moneycreation
-
+This should be version 1.0 
 ## Project setup
 ```
 npm install
