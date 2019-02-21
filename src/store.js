@@ -5,7 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    bank: {"Client Loan":0 , "Client Deposits": 210, "Cash": 100 , "Capital": -100},
+    bank: {"Client Loan":0 , "Client Deposits": -210, "Cash": 310 , "Capital": -100},
     me: {"Tokens": 0, "Bitcoins": 0, "Current Account": 10 , "Debt with Bank": 0},
     other: {"Current Account": 200, "Tokens": 100, "Bitcoins": 100, "Shares": 100},
     startup: {"Bitcoins": 100 , "Capital": -100},

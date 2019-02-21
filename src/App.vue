@@ -5,131 +5,56 @@
     <input v-on:click="buyIco" type=button value="Buy Tokens">
     <input v-on:click="mineBitcoin" type=button value="Mine Bitcoin">
     <input v-on:click="buyBitcoin" type=button value="Buy Bitcoin">
-    <h3>Money in the System is {{ totalMoney }}</h3>
-    <div class=bank>
-      <h1>Bank</h1>
-      <div v-for="(amount,account) in this.$store.state.bank">
-        {{ account }} : {{ amount }}<br>
-      </div>
-    </div>
-    <div class=startup>
-      <h1>Startup</h1>
-      <div v-for="amount,account in this.$store.state.startup">
-        {{ account }} : {{ amount }}<br>
-      </div>
-    </div>
-    <div class=me>
-      <h1>Me</h1>
-      <div v-for="amount,account in this.$store.state.me">
-        {{ account }} : {{ amount }}<br>
-      </div>
-    </div>
-    <div class=others>
-      <h1>Others</h1>
-      <div v-for="amount,account in this.$store.state.other">
-        {{ account }} : {{ amount }}<br>
-      </div>
+    <h3>Money in the System is {{ totalMoney }} USD</h3>
+    <div id="NewStyle">
+      <Ledger title="bank"/>
+      <Ledger title="me"/>
+      <Ledger title="startup"/>
+      <Ledger title="other"/>
     </div>
   </div>
 </template>
 
 <script>
-//import store from "./store";
-
 import store from './store' ;
-// import { mapGetters, mapState } from 'vuex' ;
+import Ledger from './ledger' ;
+import { mapState } from 'vuex';
+import { rules } from "./rules.js";
 
 export default {
 
   name: "app",
   components: {
-    // HelloWorld
+    Ledger
   },
   data() {
     return {
-      //myBankLoan: this.$store.state.myBankLoan,
-      bitcoinIsMoney: true,
-      tokenIsMoney: true
+      ledgers: ['bank','me','startup','other'],
+      moneyAccounts: ["Current Account","Bitcoins","Tokens","Cash"],
      }
   },
   methods: {
-    askLoan: function () {
-      // Accounting in the Banks Ledger
-      this.$store.commit("gl", {
-        gl:"bank",
-        credit:"Client Loan",
-        debit:"Client Deposits",
-        amount:1
-      });
-      // Accounting in the My Ledger
-      this.$store.commit("gl", {
-        gl:"me",
-        credit:"Current Account",
-        debit:"Debt with Bank",
-        amount:1
-      });
-    } ,
-    buyIco: function () {
-      // Accounting in the Others Ledger
-      this.$store.commit("gl", {
-        gl:"other",
-        credit:"Bitcoins",
-        debit:"Tokens",
-        amount:1
-      });
-      // Accounting in the My Ledger
-      this.$store.commit("gl", {
-        gl:"me",
-        credit:"Tokens",
-        debit:"Bitcoins",
-        amount:1
-      });
-    } ,
-    mineBitcoin: function () {
-      // Accounting in the Others Ledger
-      this.$store.commit("gl", {
-        gl:"other",
-        credit:"Bitcoins",
-        debit:"Profit&Loss",
-        amount:1
-      });
-      // Accounting in the My Ledger
-      this.$store.commit("gl", {
-        gl:"me",
-        credit:"Bitcoins",
-        debit:"Current Account",
-        amount:1
-      });} ,
-    buyBitcoin: function () {
-      // Accounting in the Others Ledger
-      this.$store.commit("gl", {
-        gl:"other",
-        credit:"Current Account",
-        debit:"Bitcoins",
-        amount:1
-      });
-      // Accounting in the My Ledger
-      this.$store.commit("gl", {
-        gl:"me",
-        credit:"Bitcoins",
-        debit:"Current Account",
-        amount:1
-      });
-
-    } ,
+    askLoan: function() { rules.askLoan(this.$store) },
+    buyIco: function() { rules.buyIco(this.$store) },
+    mineBitcoin: function () { rules.mineBitcoin(this.$store) },
+    buyBitcoin: function () { rules.buyBitcoin(this.$store) },
   },
   computed: {
     totalMoney(){
-      return this.$store.state.myCurrentAcc +
-             this.$store.state.theirCurrentAcc +
-             (this.$data.bitcoinIsMoney? store.state.theirBitcoins + store.state.myBitcoins : 0 ) +
-             (this.$data.tokenIsMoney? store.state.theirTokens + store.state.myTokens : 0 ) ;
-    },
-    myCurrentAcc() { return store.getters.myCurrentAcc },
-    myBankLoan() { return store.getters.myBankLoan },
+      var money = 0;
+      var ledgers=this.$data.ledgers;
+      var moneyAccounts=this.$data.moneyAccounts;
+      for(var i = 0; i < (ledgers.length) ; i++ ) {
+        for( var account in this.$store.state[ledgers[i]]) {
+          var balance = this.$store.state[ledgers[i]][account];
+          if (moneyAccounts.indexOf(account)>-1)  money+=balance ;
+        }
+      }
+      return money;
+    }
+  },
+}
 
-  }
-};
 </script>
 
 <style>
@@ -140,13 +65,5 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-}
-.me, .bank, .startup, .others {
-  display: inline-block;
-  *display: inline;
-  vertical-align: top;
-  text-align: left;
-  font-size: 14px;
-  width: 200px;
 }
 </style>
