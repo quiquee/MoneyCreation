@@ -25,5 +25,6 @@ npm run test
 npm run lint
 ```
 
+### A precompiled version available https://quiquee.github.com/MoneyCreation
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
