@@ -5,14 +5,14 @@ export const rules = {
             gl: "bank",
             credit: "Client Loan",
             debit: "Client Deposits",
-            amount: 1000
+            amount: 100
         });
         // Accounting in the My Ledger
         store.commit("gl", {
             gl: "me",
             credit: "Current Account",
             debit: "Debt with Bank",
-            amount: 1000
+            amount: 100
         });
     },
 
@@ -22,14 +22,14 @@ export const rules = {
             gl: "other",
             credit: "Bitcoins",
             debit: "Tokens",
-            amount: 10
+            amount: 100
         });
         // Accounting in the My Ledger
         store.commit("gl", {
             gl: "me",
             credit: "Tokens",
             debit: "Bitcoins",
-            amount: 10
+            amount: 100
         });
     },
 
@@ -39,14 +39,14 @@ export const rules = {
             gl: "me",
             credit: "Cash",
             debit: "Current Account",
-            amount: 10
+            amount: 100
         });
         // Accounting in the My Ledger
         store.commit("gl", {
             gl: "bank",
             credit: "Client Deposits",
             debit: "Cash",
-            amount: 10
+            amount: 100
         });
     },
 
@@ -56,14 +56,14 @@ export const rules = {
             gl: "other",
             credit: "Bitcoins",
             debit: "Profit&Loss",
-            amount: 1
+            amount: 100
         });
         // Accounting in the My Ledger
         store.commit("gl", {
             gl: "me",
             credit: "Bitcoins",
             debit: "Current Account",
-            amount: 1
+            amount: 100
         });
     },
 
@@ -73,14 +73,14 @@ export const rules = {
             gl: "other",
             credit: "Current Account",
             debit: "Bitcoins",
-            amount: 1
+            amount: 100
         });
         // Accounting in the My Ledger
         store.commit("gl", {
             gl: "me",
             credit: "Bitcoins",
             debit: "Current Account",
-            amount: 1
+            amount: 100
         });
     }
 };
