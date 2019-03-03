@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"></script>
+
+      <script type="text/javascript">
+
+      $(document).ready(function(){
+
+          // Banks Balance Sheet
+          var bsamount=100;
+          var miningcost=95;
+          var btcamount=1000;
+          // My finance: banks + cryptoccy + ico investment
+          var bamount=0;
+          var camount=0;
+          var iamount=0;
+          var debt=0;
+
+          showamounts = function() {
+              // My Finances
+              $('#i-have-b').text(bamount);
+              $('#i-have-c').text(camount);
+              $('#i-have-i').text(iamount);
+              $('#i-owe').text(debt);
+              // Others Finances
+              $('#o-have-b').text(bsamount-bamount);
+              $('#o-have-c').text(btcamount-camount);
+              // Bank Balance Sheet
+              $('#assets').text(bsamount);
+              $('#liabilities').text(bsamount);
+              // ICO
+              $('#iassets').text(iamount);
+              $('#iliabilities').text(iamount);
+              // Bitcoins
+              $('#cliabilities').text(btcamount);
+          }
+          $('#ask-loan').click( function() {
+            // bamount: Money in my current account
+            // bsamount: Money in the bank
+            // debt: money I owe
+              bamount=bamount+100;
+              bsamount=bsamount+100;
+              debt=debt+100;
+              showamounts();
+          })
+          $('#invest-ico').click( function() {
+            // iamount: the amount in dollars of the tokens I have
+            // bamount: Money in my current account
+            // bsamount: Money in the bank
+              iamount=iamount+100;
+              bsamount=bsamount-100;
+              bamount=bamount-100;
+              showamounts();
+          })
+          $('#buy-bitcoin').click( function() {
+            // camount: the amount of crypto I have
+            // bamount: Money in my current account
+              camount=camount+100;
+              bamount=bamount-100;
+              showamounts();
+          })
+          $('#mine-bitcoin').click( function() {
+            // camount: amount of bitcoins I have in dollars
+            // btcamount: total amount of bitcoins in dollars
+            // bamount: Money in my current account
+            // bsamount: Money in the bank
+              camount=camount+100;
+              btcamount=btcamount+100;
+              bamount=bamount-miningcost;
+              bsamount=bsamount+miningcost;
+              showamounts();
+          })
+
+          showamounts();
+      });
+
+      </script>
+
+<style>
+.container {
+    display: block;
+    font-size: 14px;
+}
+
+h2, .acc {
+    font-size: 16;
+}
+.top-left {
+  position: relative;
+  top: -178px;
+  left: 90px;
+}
+
+.top-right {
+    position: relative;
+    top: -210px;
+    left: 163px;
+}
+
+
+.centered {
+  position: relative;
+  top: -220px;
+  left: 137px;
+}
+
+.acc, .acc-amt {
+    display:inline;
+    position:relative;
+    left: 1px;
+    padding: 2px;
+    font-size: 16px;
+}
+.acc-amt {
+    color: #0000AA;
+}
+.pict {
+   display: inline-block;
+   width: 250px;
+}
+</style>
+</head>
+<body>
+<h2 align=centrr>Money Creation Machine</h2>
+(instructions at the bottom)<br>
+<a href=https://github.com/quiquee/MoneyCreation>See code</a><br>
+<input id=ask-loan type=button value="Ask for a Loan">
+<input id=invest-ico type=button value="Buy Tokens">
+<input id=mine-bitcoin type=button value="Mine Bitcoin">
+<input id=buy-bitcoin type=button value="Buy Bitcoin">
+<P>
+
+<div class=acc>I Have in Bank:<div id=i-have-b class=acc-amt>0</div>
+ in Bitcoins:<div id=i-have-c class=acc-amt>0</div>
+ in Tokens:<div id=i-have-i class=acc-amt>0</div>
+</div>
+<br>
+<div class=acc>I Owe to Bank:<div id=i-owe class=acc-amt>0</div>
+</div>
+<br>
+<div class=acc>Others have in Bitcoins:<div id=o-have-c class=acc-amt>0</div>
+ in Bank<div id=o-have-b class=acc-amt>0</div>
+</div>
+
+<div class="container" >
+  <div class=pict>
+      <img src="Bank.png" style="width: 300px;">
+      <div id="mode" class="centered">Bank</div>
+      <div class="top-left">
+          <div>Assets</div>
+          <div id=assets>0</div>
+      </div>
+      <div class="top-right">
+          <div>Liabilities</div>
+          <div id=liabilities>0</div>
+      </div>
+  </div>
+
+  <div class="pict">
+      <img src="Garaje.png" style="width: 300px; padding: 40px;">
+      <div id="mode" class="centered">ICO Garage</div>
+      <div class="top-left">
+          <div>Assets</div>
+          <div id=iassets>0</div>
+      </div>
+      <div class="top-right">
+          <div>Liabilities</div>
+          <div id=iliabilities>0</div>
+      </div>
+  </div>
+
+  <div class="pict">
+      <img src="Blockchain.png" style="width: 300px; padding: 40px;">
+      <div id="mode" class="centered" style="Color: white;">Bitcoin Blockchain</div>
+      <div class="top-right">
+          <div style="Color: white;">Bitcoins</div>
+          <div style="Color: white;" id=cliabilities>0</div>
+      </div>
+  </div>
+</div>
+<pre>
+INSTRUCTIONS:
+System starts with 1000 USD equivalent of Bitcoins in the Blockchain
+The bank has initial deposits for value of 100 USD
+We start with no money, the 100USD in the bank and the 1000USD in
+ bitcoins belong to others
+
+There is no limit to the amount of loans that a bank can give
+
+Participation in ICO is done using fiat from the bank
+Loans, mining and investment are for an amount of 100 USD (equivalent in value)
+Cost of mining bitcoins is 95 USD (for an amount of BTC equiv to 100 USD)
+</pre>
+</body>
+</html>
