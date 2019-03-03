@@ -1,0 +1,67 @@
+<template>
+<div class="graph">
+    <v-chart v-bind:chartData="{...chartData , ...{selector: 'asset' + this.title},
+         ...assetData}"></v-chart>
+    <v-chart v-bind:chartData="{...chartData , ...{selector: 'liab' + this.title} ,
+         ...liabilityData}"></v-chart>
+</div>
+</template>
+<script>
+export default {
+    //glData: store.$state,
+    name: 'example',
+    props: ['title','gl', 'width', 'height'],
+    data: function() {
+        return {
+            chartData: {
+                chartType: 'vBarChart',
+                // selector: this.title,
+                x: 20,
+                title: this.title,
+                width: this.width,
+                height: this.height,
+                dim: "acc",
+                metric: "balance",
+                chartType: "vBarChart",
+            }
+        }
+    },
+    computed: {
+        graphData() {
+            let gData=[];
+            for ( let account in this.$store.state.dbGl[this.gl]) {
+                gData.push({acc: account, balance: this.$store.state.dbGl[this.gl][account] });
+            }
+            return { data: gData};
+            //return this.$store.getters.moneyData;
+        },
+        assetData() {
+            let gData=[];
+            for ( let account in this.$store.state.dbGl[this.gl]) {
+                let balance=this.$store.state.dbGl[this.gl][account] ;
+                if (balance>0) gData.push({acc: account, balance: balance });
+            }
+            return { data: gData};
+            //return this.$store.getters.moneyData;
+        },
+        liabilityData() {
+            let gData=[];
+            for ( let account in this.$store.state.dbGl[this.gl]) {
+                let balance=this.$store.state.dbGl[this.gl][account] ;
+                if (balance<0) gData.push({acc: account, balance: -balance });
+            }
+            return { data: gData};
+            //return this.$store.getters.moneyData;
+        },
+    }
+}
+</script>
+
+<style>
+.graph {
+    display: inline-block;
+    *display: inline;
+    margin-left: 20px;
+    vertical-align: bottom;
+}
+</style>
