@@ -1,9 +1,19 @@
 <template>
 <div class="graph">
-    <v-chart v-bind:chartData="{...chartData , ...{selector: 'asset' + this.title},
-         ...assetData}"></v-chart>
-    <v-chart v-bind:chartData="{...chartData , ...{selector: 'liab' + this.title} ,
-         ...liabilityData}"></v-chart>
+    <v-chart v-if="assetData.data.length > 0 "
+      v-bind:chartData="{
+        ...chartData ,
+        ...{selector: 'asset' + this.title},
+        ...{title: 'Assets'},
+        ...assetData}"></v-chart>
+
+    <v-chart v-if="liabilityData.data.length > 0 "
+      v-bind:chartData="{
+        ...chartData ,
+        ...{selector: 'liab' + this.title} ,
+        ...{title: 'Liabilities'},
+        ...liabilityData}"></v-chart>
+
 </div>
 </template>
 <script>
@@ -15,14 +25,18 @@ export default {
         return {
             chartData: {
                 chartType: 'vBarChart',
-                // selector: this.title,
-                x: 20,
                 title: this.title,
                 width: this.width,
                 height: this.height,
                 dim: "acc",
                 metric: "balance",
                 chartType: "vBarChart",
+                overrides: {
+                  palette: {
+                    fill: ["#f66", "#4fc08d"],
+                    stroke: "#41B883"
+                  }
+                }
             }
         }
     },

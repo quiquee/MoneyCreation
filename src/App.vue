@@ -2,7 +2,12 @@
 <div id="app">
     <h1>Money Creation Simulator</h1>
     <input v-on:click="askLoan" type=button value="Ask for a Loan">
-    <input v-on:click="buyIco" type=button value="Buy Tokens">
+
+
+      <input
+        :disabled="this.$store.state.dbGl['me']['Bitcoins']=0"
+        v-on:click="buyIco" type=button value="Buy Tokens">
+
     <input v-on:click="drawCash" type=button value="Draw Cash">
     <input v-on:click="mineBitcoin" type=button value="Mine Bitcoin">
     <input v-on:click="buyBitcoin" type=button value="Buy Bitcoin">
@@ -59,7 +64,8 @@ export default {
         buyBitcoin: function() {
             rules.buyBitcoin(this.$store)
         },
-        drawCash: function() {},
+        drawCash: function() {
+            rules.drawCash(this.$store)},
     },
     computed: {
         totalMoney() {
@@ -79,6 +85,10 @@ export default {
 </script>
 
 <style>
+.btAction {
+  display: inline-block;
+  *display: inline;
+}
 #app {
     font-family: "Avenir", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;

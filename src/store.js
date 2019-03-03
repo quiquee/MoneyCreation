@@ -7,9 +7,9 @@ export default new Vuex.Store({
   state: {
       dbGl: {
           bank: {"Client Loan":0 , "Client Deposits": -210, "Cash": 310 , "Capital": -100},
-          me: {"Tokens": 0, "Bitcoins": 0, "Current Account": 10 , "Debt with Bank": 0},
+          me: {"Tokens": 10, "Bitcoins": 100, "Current Account": 10 , "Debt with Bank": 0},
           other: {"Current Account": 200, "Tokens": 100, "Bitcoins": 100, "Shares": 100},
-          startup: {"Bitcoins": 100 , "Capital": -100},
+          startup: {"Bitcoins": 110 , "Capital": -100},
       },
       moneyAccounts: ["Current Account", "Bitcoins", "Tokens", "Cash"],
   },
@@ -26,7 +26,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
-      
+
       ledgers: (state) => {
           return Object.keys(state.dbGl);
       }

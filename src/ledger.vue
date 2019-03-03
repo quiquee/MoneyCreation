@@ -5,7 +5,7 @@
         <div class="asset" v-if="amount > 0">
             {{ account }} : {{ amount }} USD<br>
         </div>
-        <div class="liability" v-else>
+        <div class="liability" v-else-if="amount<0">
             {{ account }} : {{ amount }} USD<br>
         </div>
     </div>
