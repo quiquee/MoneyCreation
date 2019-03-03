@@ -1,16 +1,30 @@
 <template>
 <div id="app">
     <h1>Money Creation Simulator</h1>
-    <input v-on:click="askLoan" type=button value="Ask for a Loan">
 
+    <input title="BORROW MONEY FROM BANK"
+        v-on:click="askLoan" type=button value="Borrow Money">
 
-      <input
-        :disabled="this.$store.state.dbGl['me']['Bitcoins']=0"
+    <input title="PAY BACK LOAN"
+            v-on:click="payLoan" type=button value="Pay Back">
+
+    <input title="BUY TOKENS WITH BITCOINS"
+        :disabled="this.$store.state.dbGl['me']['Bitcoins']<=0"
         v-on:click="buyIco" type=button value="Buy Tokens">
 
-    <input v-on:click="drawCash" type=button value="Draw Cash">
-    <input v-on:click="mineBitcoin" type=button value="Mine Bitcoin">
-    <input v-on:click="buyBitcoin" type=button value="Buy Bitcoin">
+    <input title="DRAW CASH FROM BANK"
+       :disabled="this.$store.state.dbGl['me']['Current Account']<=0 ||
+       this.$store.state.dbGl['bank']['Cash']<=0 "
+       v-on:click="drawCash" type=button value="Draw Cash">
+
+    <input title="MINE BITCOINS"
+        v-on:click="mineBitcoin" type=button value="Mine Bitcoin">
+
+    <input title="BUY BITCOINS WITH CASH"
+       :disabled="this.$store.state.dbGl['me']['Cash']<=0 ||
+       this.$store.state.dbGl['other']['Bitcoins']<=0 "
+       v-on:click="buyBitcoin" type=button value="Buy Bitcoin">
+
     <h3>Money in the System is {{ totalMoney }} USD</h3>
     <div id="NewStyle">
         <div>
@@ -18,21 +32,17 @@
             <Chart title="Bank" gl="bank" width=300 height=200 />
         </div>
         <div>
-        <Ledger title="Me" gl="me"/>
-        <Chart title="Me" gl="me" width=300 height=200 />
+            <Ledger title="Me" gl="me"/>
+            <Chart title="Me" gl="me" width=300 height=200 />
         </div>
-<div>
-        <Ledger title="Startup" gl="startup"/>
-        <Chart title="Startup" gl="startup" width=300 height=200 />
+        <div>
+            <Ledger title="Startup" gl="startup"/>
+            <Chart title="Startup" gl="startup" width=300 height=200 />
         </div>
-    <div>
+        <div>
             <Ledger title="Others" gl="other"/>
-        <Chart title="Other" gl="other" width=300 height=200 />
+            <Chart title="Other" gl="other" width=300 height=200 />
         </div>
-
-    </div>
-    <div id="NewStyle">
-
     </div>
 </div>
 </template>
@@ -54,6 +64,9 @@ export default {
     methods: {
         askLoan: function() {
             rules.askLoan(this.$store)
+        },
+        payLoan: function() {
+            rules.payLoan(this.$store)
         },
         buyIco: function() {
             rules.buyIco(this.$store)
@@ -85,6 +98,9 @@ export default {
 </script>
 
 <style>
+.NewStyle {
+    text-align: left;
+}
 .btAction {
   display: inline-block;
   *display: inline;
@@ -97,4 +113,5 @@ export default {
     color: #2c3e50;
     margin-top: 60px;
 }
+
 </style>

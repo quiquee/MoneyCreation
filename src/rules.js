@@ -15,7 +15,22 @@ export const rules = {
             amount: 100
         });
     },
-
+    payLoan: function(store) {
+        // Accounting in the Banks Ledger
+        store.commit("gl", {
+            gl: "bank",
+            debit: "Client Loan",
+            credit: "Client Deposits",
+            amount: 100
+        });
+        // Accounting in the My Ledger
+        store.commit("gl", {
+            gl: "me",
+            debit: "Current Account",
+            credit: "Debt with Bank",
+            amount: 100
+        });
+    },
     buyIco: function(store) {
         // Accounting in the Others Ledger
         store.commit("gl", {
@@ -79,7 +94,7 @@ export const rules = {
         store.commit("gl", {
             gl: "me",
             credit: "Bitcoins",
-            debit: "Current Account",
+            debit: "Cash",
             amount: 100
         });
     }

@@ -12,6 +12,8 @@
         ...chartData ,
         ...{selector: 'liab' + this.title} ,
         ...{title: 'Liabilities'},
+        ...{overrides: {
+          palette: { fill: ['#922', '#ddd'] }}},        
         ...liabilityData}"></v-chart>
 
 </div>
@@ -31,12 +33,6 @@ export default {
                 dim: "acc",
                 metric: "balance",
                 chartType: "vBarChart",
-                overrides: {
-                  palette: {
-                    fill: ["#f66", "#4fc08d"],
-                    stroke: "#41B883"
-                  }
-                }
             }
         }
     },
