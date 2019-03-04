@@ -6,10 +6,13 @@
         v-on:click="askLoan" type=button value="Borrow Money">
 
     <input title="PAY BACK LOAN"
+            :disabled="this.$store.state.dbGl['me']['Debt with Bank']==0 ||
+            this.$store.state.dbGl['me']['Current Account']<=0"
             v-on:click="payLoan" type=button value="Pay Back">
 
     <input title="BUY TOKENS WITH BITCOINS"
-        :disabled="this.$store.state.dbGl['me']['Bitcoins']<=0"
+        :disabled="this.$store.state.dbGl['me']['Bitcoins']<=0 ||
+        this.$store.state.dbGl['other']['Tokens']<=0"
         v-on:click="buyIco" type=button value="Buy Tokens">
 
     <input title="DRAW CASH FROM BANK"
@@ -28,12 +31,12 @@
     <h3>Money in the System is {{ totalMoney }} USD</h3>
     <div id="NewStyle">
         <div>
-            <Ledger title="Bank" gl="bank"/>
-            <Chart title="Bank" gl="bank" width=300 height=200 />
-        </div>
-        <div>
             <Ledger title="Me" gl="me"/>
             <Chart title="Me" gl="me" width=300 height=200 />
+        </div>
+        <div>
+            <Ledger title="Bank" gl="bank"/>
+            <Chart title="Bank" gl="bank" width=300 height=200 />
         </div>
         <div>
             <Ledger title="Startup" gl="startup"/>
