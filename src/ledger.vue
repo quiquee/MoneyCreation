@@ -22,6 +22,7 @@ export default {
 <style>
 h1 {
   margin: 0px;
+  font-size: 16px;
   margin-bottom: 6px;
   border-bottom: 1px solid;
 }
@@ -29,11 +30,12 @@ h1 {
 .ledger {
   display: inline-block;
   *display: inline;
-  vertical-align: bottom;
+  vertical-align: top;
   text-align: left;
   font-size: 14px;
   width: 200px;
   margin-left: 10px;
+  margin-top: 40px;
   margin-bottom: 40px;
   padding: 7px;
   border: 1px solid;

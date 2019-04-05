@@ -4,8 +4,14 @@
       v-if="assetData.data.length > 0"
       v-bind:chartData="{
         ...chartData,
-        ...{ selector: 'asset' + this.title },
-        ...{ title: 'Assets' },
+        chartType: 'barChart' ,
+        selector: 'asset' + this.title ,
+        title: 'Assets',
+        height: 120,
+        minX: 500 ,
+        overrides: {
+          x: { ticks: 10 },
+        },
         ...assetData
       }"
     ></v-chart>
@@ -14,14 +20,16 @@
       v-if="liabilityData.data.length > 0"
       v-bind:chartData="{
         ...chartData,
-        ...{ selector: 'liab' + this.title },
-        ...{ title: 'Liabilities' },
-        ...{
-          overrides: {
-            palette: { fill: ['#922', '#ddd'] }
-          }
-        },
-        ...liabilityData
+        chartType: 'barChart' ,
+        selector: 'liab' + this.title ,
+        title: 'Liabilities' ,
+        height: 120,
+        minX: 500 ,
+        overrides: {
+         x: { ticks: 10 },
+         palette: { fill: ['#922', '#ddd'] }
+      },
+      ...liabilityData
       }"
     ></v-chart>
   </div>

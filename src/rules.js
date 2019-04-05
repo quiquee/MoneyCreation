@@ -79,7 +79,7 @@ export const rules = {
     // Accounting in the Others Ledger
     store.commit("gl", {
       gl: "other",
-      credit: "Current Account",
+      credit: "Cash",
       debit: "Bitcoins",
       amount: 100
     });
@@ -90,5 +90,22 @@ export const rules = {
       debit: "Cash",
       amount: 100
     });
+  },
+  buyBitcoinB: function(store) {
+    // Accounting in the Others Ledger
+    store.commit("gl", {
+      gl: "other",
+      credit: "Current Account",
+      debit: "Bitcoins",
+      amount: 100
+    });
+    // Accounting in the My Ledger
+    store.commit("gl", {
+      gl: "me",
+      credit: "Bitcoins",
+      debit: "Current Account",
+      amount: 100
+    });
+
   }
 };

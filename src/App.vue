@@ -12,8 +12,8 @@
     <input
       title="PAY BACK LOAN"
       :disabled="
-        this.$store.state.dbGl['me']['Debt with Bank'] == 0 ||
-          this.$store.state.dbGl['me']['Current Account'] <= 0
+        ! this.$store.state.dbGl['me']['Debt with Bank']  ||
+        ! this.$store.state.dbGl['me']['Current Account'] 
       "
       v-on:click="payLoan"
       type="button"
@@ -23,8 +23,8 @@
     <input
       title="BUY TOKENS WITH BITCOINS"
       :disabled="
-        this.$store.state.dbGl['me']['Bitcoins'] <= 0 ||
-          this.$store.state.dbGl['other']['Tokens'] <= 0
+        ! this.$store.state.dbGl['me']['Bitcoins']  ||
+        ! this.$store.state.dbGl['other']['Tokens']
       "
       v-on:click="buyIco"
       type="button"
@@ -34,8 +34,8 @@
     <input
       title="DRAW CASH FROM BANK"
       :disabled="
-        this.$store.state.dbGl['me']['Current Account'] <= 0 ||
-          this.$store.state.dbGl['bank']['Cash'] <= 0
+        ! this.$store.state.dbGl['me']['Current Account'] ||
+        ! this.$store.state.dbGl['bank']['Cash']
       "
       v-on:click="drawCash"
       type="button"
@@ -52,12 +52,23 @@
     <input
       title="BUY BITCOINS WITH CASH"
       :disabled="
-        this.$store.state.dbGl['me']['Cash'] <= 0 ||
-          this.$store.state.dbGl['other']['Bitcoins'] <= 0
+        ! this.$store.state.dbGl['me']['Cash'] ||
+        ! this.$store.state.dbGl['other']['Bitcoins']
       "
       v-on:click="buyBitcoin"
       type="button"
-      value="Buy Bitcoin"
+      value="Buy BTC w/cash"
+    />
+
+    <input
+      title="BUY BITCOINS WITH BANK TRANSFER"
+      :disabled="
+        ! this.$store.state.dbGl['me']['Current Account'] ||
+        ! this.$store.state.dbGl['other']['Bitcoins']
+      "
+      v-on:click="buyBitcoinB"
+      type="button"
+      value="Buy BTC w/Transfer"
     />
 
     <h3>Money in the System is {{ totalMoney }} USD</h3>
@@ -110,6 +121,9 @@ export default {
     },
     buyBitcoin: function() {
       rules.buyBitcoin(this.$store);
+    },
+    buyBitcoinB: function() {
+      rules.buyBitcoinB(this.$store);
     },
     drawCash: function() {
       rules.drawCash(this.$store);
