@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1>Money Creation Simulator</h1>
+    <h1>Money Creation Simulator for Ana</h1>
 
     <input
       title="BORROW MONEY FROM BANK"
@@ -13,7 +13,7 @@
       title="PAY BACK LOAN"
       :disabled="
         ! this.$store.state.dbGl['me']['Debt with Bank']  ||
-        ! this.$store.state.dbGl['me']['Current Account'] 
+        ! this.$store.state.dbGl['me']['Current Account']
       "
       v-on:click="payLoan"
       type="button"
@@ -40,6 +40,16 @@
       v-on:click="drawCash"
       type="button"
       value="Draw Cash"
+    />
+
+    <input
+      title="DEPOSIT CASH IN BANK"
+      :disabled="
+        ! this.$store.state.dbGl['me']['Cash']
+      "
+      v-on:click="depositCash"
+      type="button"
+      value="Deposit Cash"
     />
 
     <input
@@ -127,6 +137,9 @@ export default {
     },
     drawCash: function() {
       rules.drawCash(this.$store);
+    },
+    depositCash: function() {
+      rules.depositCash(this.$store);
     }
   },
   computed: {

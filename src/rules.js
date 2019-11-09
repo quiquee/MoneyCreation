@@ -65,6 +65,23 @@ export const rules = {
     });
   },
 
+  depositCash: function(store) {
+    // Accounting in the Others Ledger
+    store.commit("gl", {
+      gl: "me",
+      debit: "Cash",
+      credit: "Current Account",
+      amount: 100
+    });
+    // Accounting in the My Ledger
+    store.commit("gl", {
+      gl: "bank",
+      debit: "Client Deposits",
+      credit: "Cash",
+      amount: 100
+    });
+  },
+
   mineBitcoin: function(store) {
     // Accounting in the Others Ledger
     store.commit("gl", {

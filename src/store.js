@@ -11,13 +11,14 @@ export default new Vuex.Store({
         Bitcoins: 100,
         "Client Deposits": -200,
         Cash: 300,
-        Capital: -100
+        Capital: -200
       },
       me: {
         Tokens: 0,
         Bitcoins: 100,
         "Current Account": 100,
-        "Debt with Bank": 0
+        "Debt with Bank": 0,
+        "Profit and Loss": -200,
       },
       other: {
         "Current Account": 100,
@@ -28,7 +29,7 @@ export default new Vuex.Store({
       startup: { Bitcoins: 100, Capital: -100 }
     },
     dbJournal: { } ,
-    moneyAccounts: ["Current Account", "Bitcoins", "Tokens", "Cash"],
+    moneyAccounts: ["Current Account", "Bitcoins", "Cash"],
     txid: 0,
   },
   mutations: {
