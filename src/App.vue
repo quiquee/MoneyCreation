@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1>Money Creation Simulator for Ana</h1>
+    <h1>Money Creation Simulator</h1>
 
     <input
       title="BORROW MONEY FROM BANK"
