@@ -1,128 +1,77 @@
+
 export const rules = {
-  askLoan: function(store) {
-    // Accounting in the Banks Ledger
+  mint: function (store, amt) {
+    // Accounting in the DAO
     store.commit("gl", {
-      gl: "bank",
-      credit: "Client Loan",
-      debit: "Client Deposits",
-      amount: 100
-    });
-    // Accounting in the My Ledger
-    store.commit("gl", {
-      gl: "me",
-      credit: "Current Account",
-      debit: "Debt with Bank",
-      amount: 100
-    });
-  },
-  payLoan: function(store) {
-    // Accounting in the Banks Ledger
-    store.commit("gl", {
-      gl: "bank",
-      debit: "Client Loan",
-      credit: "Client Deposits",
-      amount: 100
-    });
-    // Accounting in the My Ledger
-    store.commit("gl", {
-      gl: "me",
-      debit: "Current Account",
-      credit: "Debt with Bank",
-      amount: 100
-    });
-  },
-  buyIco: function(store) {
-    // Accounting in the Others Ledger
-    store.commit("gl", {
-      gl: "other",
-      credit: "Bitcoins",
-      debit: "Tokens",
-      amount: 100
-    });
-    // Accounting in the My Ledger
-    store.commit("gl", {
-      gl: "me",
+      gl: "pleidao",
       credit: "Tokens",
-      debit: "Bitcoins",
-      amount: 100
+      debit: "Capital",
+      amount: amt
+    });
+  },
+  PublicSale: function (store, amt) {
+    // Accounting in the DAO
+    store.commit("gl", {
+      gl: "pleidao",
+      debit: "Tokens",
+      credit: "Token Sale Public",
+      amount: amt
+    });
+    // Community
+    store.commit("gl", {
+      gl: "community",
+      debit: "Token Purchase",
+      credit: "Tokens",
+      amount: amt
+    });
+  }, PrivateSale: function (store, amt) {
+    // Accounting in the DAO
+    store.commit("gl", {
+      gl: "pleidao",
+      debit: "Tokens",
+      credit: "Token Sale Private",
+      amount: amt
+    });
+    // Investors
+    store.commit("gl", {
+      gl: "investors",
+      debit: "Token Purchase",
+      credit: "Tokens",
+      amount: amt
+    });
+  },
+  Dividends: function (store, amt) {
+    // Accounting in the team
+    store.commit("gl", {
+      gl: "plei",
+      credit: "Tokens",
+      debit: "Revenue Distribution",
+      amount: amt
+    });
+    // Accounting in the DAO
+    store.commit("gl", {
+      gl: "pleidao",
+      credit: "Equity",
+      debit: "Tokens",
+      amount: amt
     });
   },
 
-  drawCash: function(store) {
-    // Accounting in the Others Ledger
+  Buyback: function (store, amt) {
+    // Accounting in the DAO
     store.commit("gl", {
-      gl: "me",
-      credit: "Cash",
-      debit: "Current Account",
-      amount: 100
+      gl: "treasury",
+      debit: "Token Purchase",
+      credit: "Tokens",
+      amount: amt
     });
-    // Accounting in the My Ledger
+    // COMMUNITY
     store.commit("gl", {
-      gl: "bank",
-      credit: "Client Deposits",
-      debit: "Cash",
-      amount: 100
-    });
-  },
-
-  depositCash: function(store) {
-    // Accounting in the Others Ledger
-    store.commit("gl", {
-      gl: "me",
-      debit: "Cash",
-      credit: "Current Account",
-      amount: 100
-    });
-    // Accounting in the My Ledger
-    store.commit("gl", {
-      gl: "bank",
-      debit: "Client Deposits",
-      credit: "Cash",
-      amount: 100
+      gl: "community",
+      credit: "Tokens Sold",
+      debit: "Tokens",
+      amount: amt
     });
   },
 
-  mineBitcoin: function(store) {
-    // Accounting in the Others Ledger
-    store.commit("gl", {
-      gl: "other",
-      credit: "Bitcoins",
-      debit: "Profit&Loss",
-      amount: 100
-    });
-  },
-
-  buyBitcoin: function(store) {
-    // Accounting in the Others Ledger
-    store.commit("gl", {
-      gl: "other",
-      credit: "Cash",
-      debit: "Bitcoins",
-      amount: 100
-    });
-    // Accounting in the My Ledger
-    store.commit("gl", {
-      gl: "me",
-      credit: "Bitcoins",
-      debit: "Cash",
-      amount: 100
-    });
-  },
-  buyBitcoinB: function(store) {
-    // Accounting in the Others Ledger
-    store.commit("gl", {
-      gl: "other",
-      credit: "Current Account",
-      debit: "Bitcoins",
-      amount: 100
-    });
-    // Accounting in the My Ledger
-    store.commit("gl", {
-      gl: "me",
-      credit: "Bitcoins",
-      debit: "Current Account",
-      amount: 100
-    });
-
-  }
 };

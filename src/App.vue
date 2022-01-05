@@ -1,105 +1,43 @@
 <template>
   <div id="app">
-    <h1>Money Creation Simulator for Ana</h1>
-
-    <input
-      title="BORROW MONEY FROM BANK"
-      v-on:click="askLoan"
-      type="button"
-      value="Borrow Money"
-    />
-
-    <input
-      title="PAY BACK LOAN"
-      :disabled="
-        ! this.$store.state.dbGl['me']['Debt with Bank']  ||
-        ! this.$store.state.dbGl['me']['Current Account']
-      "
-      v-on:click="payLoan"
-      type="button"
-      value="Pay Back"
-    />
-
-    <input
-      title="BUY TOKENS WITH BITCOINS"
-      :disabled="
-        ! this.$store.state.dbGl['me']['Bitcoins']  ||
-        ! this.$store.state.dbGl['other']['Tokens']
-      "
-      v-on:click="buyIco"
-      type="button"
-      value="Buy Tokens"
-    />
-
-    <input
-      title="DRAW CASH FROM BANK"
-      :disabled="
-        ! this.$store.state.dbGl['me']['Current Account'] ||
-        ! this.$store.state.dbGl['bank']['Cash']
-      "
-      v-on:click="drawCash"
-      type="button"
-      value="Draw Cash"
-    />
-
-    <input
-      title="DEPOSIT CASH IN BANK"
-      :disabled="
-        ! this.$store.state.dbGl['me']['Cash']
-      "
-      v-on:click="depositCash"
-      type="button"
-      value="Deposit Cash"
-    />
-
-    <input
-      title="MINE BITCOINS"
-      v-on:click="mineBitcoin"
-      type="button"
-      value="Mine Bitcoin"
-    />
-
-    <input
-      title="BUY BITCOINS WITH CASH"
-      :disabled="
-        ! this.$store.state.dbGl['me']['Cash'] ||
-        ! this.$store.state.dbGl['other']['Bitcoins']
-      "
-      v-on:click="buyBitcoin"
-      type="button"
-      value="Buy BTC w/cash"
-    />
-
-    <input
-      title="BUY BITCOINS WITH BANK TRANSFER"
-      :disabled="
-        ! this.$store.state.dbGl['me']['Current Account'] ||
-        ! this.$store.state.dbGl['other']['Bitcoins']
-      "
-      v-on:click="buyBitcoinB"
-      type="button"
-      value="Buy BTC w/Transfer"
-    />
-
-    <h3>Money in the System is {{ totalMoney }} USD</h3>
+    <h1>Money Creation Simulator</h1>
+    
+    <button v-on:click="runSimProxy(true)">Run Simulation</button>
+    <button v-on:click="runSimProxy(false)">Run Step</button>
+    <button v-on:click="showJournal()">ShowJournal</button>
+    <button v-if="!this.paused" v-on:click="pause">Pause</button>
+    <button v-if="this.paused" v-on:click="pause">Continue</button>
+    <button v-on:click="decelerate">-</button>Speed ({{ this.speed }})<button
+      v-on:click="accelerate"
+    >
+      +
+    </button>
+    <h3>Step {{ $store.state.epoch }} {{ this.currdate }} 
+    Tokens : {{ totalMoney }} </h3>
+    Amounts are in Millions
     <div id="NewStyle">
       <div>
-        <Ledger title="Me" gl="me" />
-        <Chart title="Me" gl="me" width="300" height="200" />
+        <Ledger title="Treasury" gl="treasury" />
+        <Chart title="Plei" gl="plei" width="300" height="200" />
       </div>
       <div>
-        <Ledger title="Bank" gl="bank" />
-        <Chart title="Bank" gl="bank" width="300" height="200" />
+        <Ledger title="Community" gl="community" />
+        <Chart title="Community" gl="community" width="300" height="200" />
       </div>
       <div>
-        <Ledger title="Startup" gl="startup" />
-        <Chart title="Startup" gl="startup" width="300" height="200" />
+        <Ledger title="Investors" gl="investors" />
+        <Chart title="Community" gl="community" width="300" height="200" />
       </div>
       <div>
-        <Ledger title="Others" gl="other" />
-        <Chart title="Other" gl="other" width="300" height="200" />
+        <Ledger title="Plei Dao" gl="pleidao" />
+        <Chart title="Plei Dao" gl="pleidao" width="300" height="200" />
+      </div>
+      <div>
+        <Ledger title="Plei Team" gl="plei" />
+        <Chart title="Plei Dao" gl="pleidao" width="300" height="200" />
       </div>
     </div>
+    
   </div>
 </template>
 
@@ -107,40 +45,76 @@
 import Ledger from "./ledger";
 import { rules } from "./rules.js";
 import Chart from "./chart";
+import { schedule } from "./schedule.js";
 export default {
   name: "app",
   components: {
     Ledger,
-    Chart
+    Chart,
   },
   data() {
-    return {};
+    return {
+      speed: 1000,
+      speedinterval: 10,
+      genesis: "2022-05-01T00:00:00.000Z",
+      currdate: null,
+      paused: false,
+    };
   },
   methods: {
-    askLoan: function() {
-      rules.askLoan(this.$store);
+    showJournal: function () {
+      console.log(this.$store.state.dbJournal);
     },
-    payLoan: function() {
-      rules.payLoan(this.$store);
+
+    runSimProxy: function (step) {
+      this.currdate = new Date(this.genesis);
+      this.currdate.setMonth(
+        this.currdate.getMonth() + this.$store.state.epoch
+      );
+      var current = this.currdate.getTime();
+      if (!this.paused) {
+        [...schedule].forEach((element) => {
+          var start = new Date(Date.parse(element["Start Date"])).getTime();
+          var end = new Date(Date.parse(element["End Date"])).getTime();
+          if (start == end ) { end = start + 2628000000}
+          console.log("Check " + element.Item)
+          if ( start <= current && current <= end ) {
+            rules[element.Event](this.$store, element.EventAmount);
+            console.log(
+              element.Item +
+                " / " +
+                element.Event +
+                " Tokens: " +
+                element.EventAmount
+            );
+          }
+        });
+
+        this.$store.commit("dawn");
+        if (step) {          
+          setTimeout(() => {
+            this.runSimProxy(step);
+          }, this.speed);
+        }
+      }
     },
-    buyIco: function() {
-      rules.buyIco(this.$store);
+
+    pause: function () {
+      if (this.paused) {
+        this.paused = false;
+        this.runSim();
+      } else {
+        this.paused = true;
+      }
     },
-    mineBitcoin: function() {
-      rules.mineBitcoin(this.$store);
+    decelerate: function () {
+      this.speed = this.speed + this.speedinterval;
     },
-    buyBitcoin: function() {
-      rules.buyBitcoin(this.$store);
+    accelerate: function () {
+      if (this.speed > this.speedinterval) {
+        this.speed = this.speed - this.speedinterval;
+      }
     },
-    buyBitcoinB: function() {
-      rules.buyBitcoinB(this.$store);
-    },
-    drawCash: function() {
-      rules.drawCash(this.$store);
-    },
-    depositCash: function() {
-      rules.depositCash(this.$store);
-    }
   },
   computed: {
     totalMoney() {
@@ -154,26 +128,25 @@ export default {
             money += balance;
         }
       }
-      return money;
-    }
-  }
+      return Math.round(money);
+    },
+  },
 };
 </script>
 
-<style>
-.NewStyle {
-  text-align: left;
-}
-.btAction {
-  display: inline-block;
-  *display: inline;
-}
+<style scoped>
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 10px;
+}
+
+button {
+  border-style: line;
+  margin-left: 0em;
+  padding: 0.2em;
 }
 </style>

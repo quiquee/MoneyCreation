@@ -3,10 +3,10 @@
     <h1>{{ title }}</h1>
     <div v-for="(amount, account) in this.$store.state.dbGl[gl]" :key="account">
       <div class="asset" v-if="amount > 0">
-        {{ account }} : {{ amount }} USD<br />
+        {{ account }} : {{ amountFmt(amount) }} <br />
       </div>
       <div class="liability" v-else-if="amount < 0">
-        {{ account }} : {{ amount }} USD<br />
+        {{ account }} : {{ amountFmt(amount) }} <br />
       </div>
     </div>
   </div>
@@ -15,7 +15,14 @@
 <script>
 export default {
   props: ["title", "gl"],
-  name: "Ledger"
+  name: "Ledger",
+  methods: {
+    amountFmt(amount){
+      if (amount ){
+      return Math.round(amount*100/1e6)/100;
+      }
+    }
+  }
 };
 </script>
 
@@ -35,8 +42,8 @@ h1 {
   font-size: 14px;
   width: 200px;
   margin-left: 10px;
-  margin-top: 40px;
-  margin-bottom: 40px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   padding: 7px;
   border: 1px solid;
   border-color: #888;
