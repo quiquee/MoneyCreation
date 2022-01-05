@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <h1>Money Creation Simulator</h1>
-    <H2>Epoch {{ $store.state.epoch }}</H2><h3> {{ this.currdate }}</H3>
     
     <button v-on:click="runSimProxy(true)">Run Simulation</button>
     <button v-on:click="runSimProxy(false)">Run Step</button>
@@ -13,7 +12,8 @@
     >
       +
     </button>
-    <h3>Total Tokens : {{ totalMoney }} </h3>
+    <h3>Step {{ $store.state.epoch }} {{ this.currdate }} 
+    Tokens : {{ totalMoney }} </h3>
     Amounts are in Millions
     <div id="NewStyle">
       <div>
