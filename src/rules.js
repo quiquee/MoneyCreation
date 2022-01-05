@@ -9,7 +9,7 @@ export const rules = {
       amount: amt
     });
   },
-  PublicSale: function (store, amt) {
+  PublicSale: function (store, amt, price) {
     // Accounting in the DAO
     store.commit("gl", {
       gl: "pleidao",

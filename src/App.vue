@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1>Money Creation Simulator</h1>
+    <h1>Money Creation Simulator (WIP)</h1>
     
     <button v-on:click="runSimProxy(true)">Run Simulation</button>
     <button v-on:click="runSimProxy(false)">Run Step</button>

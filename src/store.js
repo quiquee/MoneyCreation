@@ -36,7 +36,7 @@ export default new Vuex.Store({
     dawn(state) {
       state.epoch = state.epoch + 1;
     },
-    gl(state, payload) {
+    gl(state, payload,price) {
       if (isNaN(state.dbGl[payload.gl][payload.credit])) {
         state.dbGl[payload.gl][payload.credit] = 0;
       }
@@ -45,6 +45,12 @@ export default new Vuex.Store({
       }
       state.dbGl[payload.gl][payload.credit] += payload.amount;
       state.dbGl[payload.gl][payload.debit] -= payload.amount;
+      
+      // Case of Multicurrency Transaction
+      if (payload.debitccy != payload.creditccy) {
+        state.dbGl[payload.gl]['FX Exchange'] += payload.amount;
+        state.dbGl[payload.gl][payload.debit] -= payload.amount;
+      }
       var txid = state.txid;
       state.dbJournal[txid] = {};
       state.dbJournal[txid]["gl"] = payload.gl;

@@ -5,7 +5,8 @@ export const schedule = [
       "Start Date": "22 May 2022",
       "End Date": "22 Apr 2024",
       "Frequency": 1,
-      "EventAmount": 1333333.333
+      "EventAmount": 1333333.333,
+      "price": 0.04
     },
     {
       "Item": "Conversion",
