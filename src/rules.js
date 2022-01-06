@@ -1,4 +1,3 @@
-
 export const rules = {
   mint: function (store, amt) {
     // Accounting in the DAO
@@ -10,68 +9,101 @@ export const rules = {
     });
   },
   PublicSale: function (store, amt, price) {
-    // Accounting in the DAO
+    // Accounting in the DAO amount is in tokens
     store.commit("gl", {
       gl: "pleidao",
+      debitccy: "PLEI",
       debit: "Tokens",
+      debitamt: amt,
+      creditccy: "USDC",
       credit: "Token Sale Public",
-      amount: amt
+      creditamt: amt * market(price),
+      price: price
     });
     // Community
     store.commit("gl", {
       gl: "community",
+      debitccy: "USDC",
       debit: "Token Purchase",
+      debitamt: amt * market(price),
+      creditccy: "PLEI",
       credit: "Tokens",
-      amount: amt
+      creditamt: amt,
     });
-  }, PrivateSale: function (store, amt) {
-    // Accounting in the DAO
+  }, PrivateSale: function (store, amt, price) {
+    // Accounting in the DAO amount is in tokens
     store.commit("gl", {
       gl: "pleidao",
+      debitccy: "PLEI",
       debit: "Tokens",
-      credit: "Token Sale Private",
-      amount: amt
+      debitamt: amt,
+      creditccy: "USDC",
+      credit: "Cash",
+      creditamt: amt * market(price),
     });
     // Investors
     store.commit("gl", {
       gl: "investors",
-      debit: "Token Purchase",
+      debitccy: "USDC",
+      debit: "Cash",
+      debitamt: amt * market(price),
+      creditccy: "PLEI",
       credit: "Tokens",
-      amount: amt
+      creditamt: amt,
     });
   },
-  Dividends: function (store, amt) {
+  Dividends: function (store, amt, price) {
     // Accounting in the team
     store.commit("gl", {
       gl: "plei",
       credit: "Tokens",
+      creditccy: "PLEI",
+      creditamt: amt,
       debit: "Revenue Distribution",
-      amount: amt
+      debitccy: "PLEI",
+      debitamt: amt,
+      price: price
     });
     // Accounting in the DAO
     store.commit("gl", {
       gl: "pleidao",
+      creditccy: "PLEI",
+      creditamt: amt,
       credit: "Equity",
       debit: "Tokens",
-      amount: amt
+      debitccy: "PLEI",
+      debitamt: amt
     });
   },
 
-  Buyback: function (store, amt) {
+  Buyback: function (store, amt, price) {
     // Accounting in the DAO
     store.commit("gl", {
       gl: "treasury",
-      debit: "Token Purchase",
+      debit: "Cash",
+      debitccy: "USDC",
+      debitamt: amt * market(price),
       credit: "Tokens",
-      amount: amt
+      creditccy: "PLEI",
+      creditamt: amt,
     });
     // COMMUNITY
     store.commit("gl", {
       gl: "community",
-      credit: "Tokens Sold",
+      credit: "Cash",
+      creditccy: "USDC",
+      creditamt: amt * market(price),
       debit: "Tokens",
-      amount: amt
+      debitccy: "PLEI",
+      debitamt: amt
     });
   },
 
 };
+
+function market(price) {
+  if (price < 0) {
+    return 0.08;
+  }
+  return price;
+}

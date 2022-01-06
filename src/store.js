@@ -7,24 +7,29 @@ export default new Vuex.Store({
   state: {
     dbGl: {
       community: {
-        Tokens: 0,
-        Stake: 0,
+        "PLEI": {
+          "Tokens": 0,
+        }
       },
       investors: {
-        Tokens: 0,
-        Stake: 0,
+        "PLEI": {
+          "Tokens": 0,
+        }
       },
       pleidao: {
-        Tokens: 0,
-        Stake: 0,
+        "PLEI": {
+          "Tokens": 0,
+        }
       },
       plei: {
-        Tokens: 0,
-        Capital: 0,
+        "PLEI": {
+          "Tokens": 0,
+        }
       },
       treasury: {
-        Tokens: 0,
-        Capital: 0,
+        "PLEI": {
+          "Tokens": 0,
+        }
       },
     },
     dbJournal: {},
@@ -36,34 +41,50 @@ export default new Vuex.Store({
     dawn(state) {
       state.epoch = state.epoch + 1;
     },
-    gl(state, payload,price) {
-      if (isNaN(state.dbGl[payload.gl][payload.credit])) {
-        state.dbGl[payload.gl][payload.credit] = 0;
+    gl(state, payload) {
+
+      if (typeof(state.dbGl[payload.gl][payload.creditccy]) == 'undefined') {
+        state.dbGl[payload.gl][payload.creditccy]={};
+        state.dbGl[payload.gl][payload.creditccy][payload.credit] = 0;
       }
-      if (isNaN(state.dbGl[payload.gl][payload.debit])) {
-        state.dbGl[payload.gl][payload.debit] = 0;
+      if (typeof(state.dbGl[payload.gl][payload.debitccy]) == 'undefined') {
+        state.dbGl[payload.gl][payload.debitccy]={};
+        state.dbGl[payload.gl][payload.debitccy][payload.debit] = 0;
       }
-      state.dbGl[payload.gl][payload.credit] += payload.amount;
-      state.dbGl[payload.gl][payload.debit] -= payload.amount;
-      
+      state.dbGl[payload.gl][payload.creditccy][payload.credit] +=payload.creditamt;
+      state.dbGl[payload.gl][payload.debitccy][payload.debit] -= payload.debitamt;
       // Case of Multicurrency Transaction
-      if (payload.debitccy != payload.creditccy) {
-        state.dbGl[payload.gl]['FX Exchange'] += payload.amount;
-        state.dbGl[payload.gl][payload.debit] -= payload.amount;
+      if ( payload.debitccy != payload.creditccy) {        
+        if (payload.debitccy != 'USDC') {
+          if (isNaN(state.dbGl[payload.gl][payload.debitccy]['FX Exchange'])) {
+            state.dbGl[payload.gl][payload.debitccy]['FX Exchange']=0;
+          }
+          state.dbGl[payload.gl][payload.debitccy]['FX Exchange'] -= payload.debitamt;
+        }
+        if (payload.creditccy != 'USDC') {
+
+          if (isNaN(state.dbGl[payload.gl][payload.creditccy]['FX Exchange'])) {
+            state.dbGl[payload.gl][payload.creditccy]['FX Exchange']=0;
+          }
+          state.dbGl[payload.gl][payload.creditccy]['FX Exchange'] += payload.creditamt;
+        }
       }
       var txid = state.txid;
       state.dbJournal[txid] = {};
       state.dbJournal[txid]["gl"] = payload.gl;
       state.dbJournal[txid]["account"] = payload.debit;
+      state.dbJournal[txid]["ccy"] = payload.debitccy;
       state.dbJournal[txid]["dc"] = "d";
-      state.dbJournal[txid]["amount"] = payload.amount;
+      state.dbJournal[txid]["amount"] = payload.debitamt;
       state.dbJournal[txid]["date"] = Date.now();
       state.txid++;
+      txid = state.txid;
       state.dbJournal[txid] = {};
       state.dbJournal[txid]["gl"] = payload.gl;
       state.dbJournal[txid]["account"] = payload.credit;
+      state.dbJournal[txid]["ccy"] = payload.creditccy;
       state.dbJournal[txid]["dc"] = "c";
-      state.dbJournal[txid]["amount"] = payload.amount;
+      state.dbJournal[txid]["amount"] = payload.creditamt;
       state.dbJournal[txid]["date"] = Date.now();
       state.txid++;
     },

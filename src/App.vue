@@ -44,6 +44,7 @@
 <script>
 import Ledger from "./ledger";
 import { rules } from "./rules.js";
+import { marketdata } from "./market.js";
 import Chart from "./chart";
 import { schedule } from "./schedule.js";
 export default {
@@ -56,7 +57,7 @@ export default {
     return {
       speed: 1000,
       speedinterval: 10,
-      genesis: "2022-05-01T00:00:00.000Z",
+      genesis: "2022-05-22T00:00:00.000Z",
       currdate: null,
       paused: false,
     };
@@ -77,15 +78,25 @@ export default {
           var start = new Date(Date.parse(element["Start Date"])).getTime();
           var end = new Date(Date.parse(element["End Date"])).getTime();
           if (start == end ) { end = start + 2628000000}
-          console.log("Check " + element.Item)
+          //console.log("Check " + element.Item)
+          var price = element.Price
           if ( start <= current && current <= end ) {
-            rules[element.Event](this.$store, element.EventAmount);
+            if ( price < 0 ) 
+            {
+             console.log("Market data to use: (" + this.$store.state.epoch + ") " + marketdata[this.$store.state.epoch].Price)
+             price=marketdata[this.$store.state.epoch].Price
+             
+             // console.log(marketdata)
+             // element.Price=marketdata[this.$store.state.epoch].Price
+
+            }
+            rules[element.Event](this.$store, element.EventAmount, price);
             console.log(
               element.Item +
                 " / " +
                 element.Event +
                 " Tokens: " +
-                element.EventAmount
+                element.EventAmount + " Price: " + price
             );
           }
         });

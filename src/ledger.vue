@@ -1,13 +1,16 @@
 <template>
   <div class="ledger">
-    <h1>{{ title }}</h1>
-    <div v-for="(amount, account) in this.$store.state.dbGl[gl]" :key="account">
-      <div class="asset" v-if="amount > 0">
+    <h1>{{ title }} ( {{ gl }} )</h1>
+    <div v-for="(ccy,accasd) in this.$store.state.dbGl[gl]" :key="accasd">
+      <div> {{accasd}} </div>
+    <div v-for="(amount, account) in ccy" :key="account">
+      <div class="asset" v-if="amount > 0 && account != 'FX Exchange' ">
         {{ account }} : {{ amountFmt(amount) }} <br />
       </div>
-      <div class="liability" v-else-if="amount < 0">
+      <div class="liability" v-else-if="amount < 0 && account != 'FX Exchange'">
         {{ account }} : {{ amountFmt(amount) }} <br />
-      </div>
+      </div>      
+    </div>
     </div>
   </div>
 </template>
@@ -20,6 +23,7 @@ export default {
     amountFmt(amount){
       if (amount ){
       return Math.round(amount*100/1e6)/100;
+      //return Math.round(amount);
       }
     }
   }
@@ -35,8 +39,7 @@ h1 {
 }
 
 .ledger {
-  display: inline-block;
-  *display: inline;
+  display: inline-block;  
   vertical-align: top;
   text-align: left;
   font-size: 14px;
