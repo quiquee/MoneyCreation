@@ -18,24 +18,24 @@
     <div id="NewStyle">
       <div>
         <Ledger title="Treasury" gl="treasury" />
-        <Chart title="Plei" gl="plei" width="300" height="200" />
+        
       </div>
       <div>
         <Ledger title="Community" gl="community" />
-        <Chart title="Community" gl="community" width="300" height="200" />
+        
       </div>
       <div>
         <Ledger title="Investors" gl="investors" />
-        <Chart title="Community" gl="community" width="300" height="200" />
+        
       </div>
       <div>
         <Ledger title="Plei Dao" gl="pleidao" />
-        <Chart title="Plei Dao" gl="pleidao" width="300" height="200" />
+        
       </div>
       <div>
         <Ledger title="Plei Team" gl="plei" />
-        <Chart title="Plei Dao" gl="pleidao" width="300" height="200" />
-      </div>
+        
+      </div>      
     </div>
     
   </div>
@@ -45,13 +45,13 @@
 import Ledger from "./ledger";
 import { rules } from "./rules.js";
 import { marketdata } from "./market.js";
-import Chart from "./chart";
+
 import { schedule } from "./schedule.js";
 export default {
   name: "app",
   components: {
     Ledger,
-    Chart,
+
   },
   data() {
     return {
@@ -59,7 +59,7 @@ export default {
       speedinterval: 10,
       genesis: "2022-05-22T00:00:00.000Z",
       currdate: null,
-      paused: false,
+      paused: false,      
     };
   },
   methods: {
@@ -68,6 +68,7 @@ export default {
     },
 
     runSimProxy: function (step) {
+
       this.currdate = new Date(this.genesis);
       this.currdate.setMonth(
         this.currdate.getMonth() + this.$store.state.epoch
@@ -84,11 +85,7 @@ export default {
             if ( price < 0 ) 
             {
              console.log("Market data to use: (" + this.$store.state.epoch + ") " + marketdata[this.$store.state.epoch].Price)
-             price=marketdata[this.$store.state.epoch].Price
-             
-             // console.log(marketdata)
-             // element.Price=marketdata[this.$store.state.epoch].Price
-
+             price=marketdata[this.$store.state.epoch].Price             
             }
             rules[element.Event](this.$store, element.EventAmount, price);
             console.log(

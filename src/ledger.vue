@@ -1,14 +1,13 @@
 <template>
   <div class="ledger">
-    <h1>{{ title }} ( {{ gl }} )</h1>
-    <div v-for="(ccy,accasd) in this.$store.state.dbGl[gl]" :key="accasd">
-      <div> {{accasd}} </div>
+    <h1>{{ title }}</h1>
+    <div v-for="(ccy,ccyaccounts) in this.$store.state.dbGl[gl]" :key="ccyaccounts">      
     <div v-for="(amount, account) in ccy" :key="account">
-      <div class="asset" v-if="amount > 0 && account != 'FX Exchange' ">
-        {{ account }} : {{ amountFmt(amount) }} <br />
+      <div class="asset" v-if="amount > 0 && account != 'xxFX Exchange' ">
+        {{ account }} ({{ccyaccounts}}) : {{ amountFmt(amount) }} <br />
       </div>
-      <div class="liability" v-else-if="amount < 0 && account != 'FX Exchange'">
-        {{ account }} : {{ amountFmt(amount) }} <br />
+      <div class="liability" v-else-if="amount < 0 && account != 'xxFX Exchange'">
+        {{ account }} ({{ccyaccounts}}): {{ amountFmt(amount) }} <br />
       </div>      
     </div>
     </div>
