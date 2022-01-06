@@ -129,7 +129,7 @@ export const schedule = [
   },
   {
     "Item": "IDO",
-    "Event": "PrivateSale",
+    "Event": "PublicSale",
     "Start Date": "22 May 2022",
     "End Date": "22 May 2022",
     "EventAmount": 30000000,

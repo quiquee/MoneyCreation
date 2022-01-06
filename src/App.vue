@@ -55,7 +55,7 @@ export default {
   },
   data() {
     return {
-      speed: 1000,
+      speed: 10,
       speedinterval: 10,
       genesis: "2022-05-22T00:00:00.000Z",
       currdate: null,
@@ -102,7 +102,7 @@ export default {
         });
 
         this.$store.commit("dawn");
-        if (step) {          
+        if (step && this.$store.state.epoch < 70) {          
           setTimeout(() => {
             this.runSimProxy(step);
           }, this.speed);
