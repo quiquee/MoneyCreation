@@ -79,24 +79,24 @@ export default {
           var end = new Date(Date.parse(element["End Date"])).getTime();
           if (start == end ) { end = start + 2628000000}
           //console.log("Check " + element.Item)
-          var price = element.Price
+          var eventPrice = element.Price
           if ( start <= current && current <= end ) {
-            if ( price < 0 ) 
+            if (eventPrice < 0 ) 
             {
              console.log("Market data to use: (" + this.$store.state.epoch + ") " + marketdata[this.$store.state.epoch].Price)
-             price=marketdata[this.$store.state.epoch].Price
+             eventPrice=marketdata[this.$store.state.epoch].Price
              
              // console.log(marketdata)
              // element.Price=marketdata[this.$store.state.epoch].Price
 
             }
-            rules[element.Event](this.$store, element.EventAmount, price);
+            rules[element.Event](this.$store, element.EventAmount, eventPrice);
             console.log(
               element.Item +
                 " / " +
                 element.Event +
                 " Tokens: " +
-                element.EventAmount + " Price: " + price
+                element.EventAmount + " Price: " + eventPrice
             );
           }
         });

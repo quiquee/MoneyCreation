@@ -1,5 +1,6 @@
 import {mgmntVariables} from "./variables.js"
-export const checks = {
+
+const checks = {
     checkprice: function (price){
         if (price < 0) {
             return -1 
@@ -12,4 +13,10 @@ export const checks = {
         }
         return 0
     },
+}
+
+export const checkState = () => {
+    eval(checks);
+    return 0
+    
 }
