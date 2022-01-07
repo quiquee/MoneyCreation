@@ -92,7 +92,7 @@ export const rules = {
       gl: "community",
       credit: "Cash",
       creditccy: "USDC",
-      creditamt: amt * market(price),
+      creditamt: amt * controls('marketprice',price),
       debit: "Tokens",
       debitccy: "PLEI",
       debitamt: amt
@@ -100,8 +100,11 @@ export const rules = {
   },
 
 };
+function applyrules(type,args){
 
-function market(price) {
+}
+
+function marketprice(price) {
   if (price < 0) {
     return 0.08;
   }
