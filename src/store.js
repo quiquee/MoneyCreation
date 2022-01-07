@@ -76,6 +76,7 @@ export default new Vuex.Store({
       state.dbJournal[txid]["ccy"] = payload.debitccy;
       state.dbJournal[txid]["dc"] = "d";
       state.dbJournal[txid]["amount"] = payload.debitamt;
+      state.dbJournal[txid]["balance"] =  state.dbGl[payload.gl][payload.debitccy][payload.debit] 
       state.dbJournal[txid]["date"] = Date.now();
       state.txid++;
       txid = state.txid;
@@ -85,6 +86,7 @@ export default new Vuex.Store({
       state.dbJournal[txid]["ccy"] = payload.creditccy;
       state.dbJournal[txid]["dc"] = "c";
       state.dbJournal[txid]["amount"] = payload.creditamt;
+      state.dbJournal[txid]["balance"] =  state.dbGl[payload.gl][payload.creditccy][payload.credit] ;
       state.dbJournal[txid]["date"] = Date.now();
       state.txid++;
     },
