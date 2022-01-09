@@ -1,12 +1,18 @@
 <template>
   <div class="ledger">
-    <h1>{{ title }}</h1>
-    <div v-for="(amount, account) in this.$store.state.dbGl[gl]" :key="account">
-      <div class="asset" v-if="amount > 0">
-        {{ account }} : {{ amount }} USD<br />
-      </div>
-      <div class="liability" v-else-if="amount < 0">
-        {{ account }} : {{ amount }} USD<br />
+    <h1>{{ title }} ( {{ gl }} )</h1>
+    <div v-for="(ccy, accasd) in this.$store.state.dbGl[gl]" :key="accasd">
+      <div>{{ accasd }}</div>
+      <div v-for="(amount, account) in ccy" :key="account">
+        <div class="asset" v-if="amount > 0 && account != 'FX Exchange'">
+          {{ account }} : {{ amountFmt(amount) }} <br />
+        </div>
+        <div
+          class="liability"
+          v-else-if="amount < 0 && account != 'FX Exchange'"
+        >
+          {{ account }} : {{ amountFmt(amount) }} <br />
+        </div>
       </div>
     </div>
   </div>
@@ -15,7 +21,15 @@
 <script>
 export default {
   props: ["title", "gl"],
-  name: "Ledger"
+  name: "Ledger",
+  methods: {
+    amountFmt(amount) {
+      if (amount) {
+        return Math.round((amount * 100) / 1e6) / 100;
+        //return Math.round(amount);
+      }
+    },
+  },
 };
 </script>
 
@@ -29,14 +43,13 @@ h1 {
 
 .ledger {
   display: inline-block;
-  *display: inline;
   vertical-align: top;
   text-align: left;
   font-size: 14px;
   width: 200px;
   margin-left: 10px;
-  margin-top: 40px;
-  margin-bottom: 40px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   padding: 7px;
   border: 1px solid;
   border-color: #888;
