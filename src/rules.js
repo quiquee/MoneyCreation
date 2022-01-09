@@ -5,7 +5,7 @@ export const rules = {
       gl: "pleidao",
       credit: "Tokens",
       debit: "Capital",
-      amount: amt
+      amount: amt,
     });
   },
   PublicSale: function (store, amt, price) {
@@ -18,7 +18,7 @@ export const rules = {
       creditccy: "USDC",
       credit: "Token Sale Public",
       creditamt: amt * market(price),
-      price: price
+      price: price,
     });
     // Community
     store.commit("gl", {
@@ -30,7 +30,8 @@ export const rules = {
       credit: "Tokens",
       creditamt: amt,
     });
-  }, PrivateSale: function (store, amt, price) {
+  },
+  PrivateSale: function (store, amt, price) {
     // Accounting in the DAO amount is in tokens
     store.commit("gl", {
       gl: "pleidao",
@@ -62,7 +63,7 @@ export const rules = {
       debit: "Revenue Distribution",
       debitccy: "PLEI",
       debitamt: amt,
-      price: price
+      price: price,
     });
     // Accounting in the DAO
     store.commit("gl", {
@@ -72,7 +73,7 @@ export const rules = {
       credit: "Equity",
       debit: "Tokens",
       debitccy: "PLEI",
-      debitamt: amt
+      debitamt: amt,
     });
   },
 
@@ -95,10 +96,9 @@ export const rules = {
       creditamt: amt * market(price),
       debit: "Tokens",
       debitccy: "PLEI",
-      debitamt: amt
+      debitamt: amt,
     });
   },
-
 };
 
 function market(price) {

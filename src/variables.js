@@ -1,3 +1,3 @@
 export const mgmntVariables = {
-    maxDaoPrice: 12
-}
+  maxDaoPrice: 12,
+};

@@ -7,29 +7,29 @@ export default new Vuex.Store({
   state: {
     dbGl: {
       community: {
-        "PLEI": {
-          "Tokens": 0,
-        }
+        PLEI: {
+          Tokens: 0,
+        },
       },
       investors: {
-        "PLEI": {
-          "Tokens": 0,
-        }
+        PLEI: {
+          Tokens: 0,
+        },
       },
       pleidao: {
-        "PLEI": {
-          "Tokens": 0,
-        }
+        PLEI: {
+          Tokens: 0,
+        },
       },
       plei: {
-        "PLEI": {
-          "Tokens": 0,
-        }
+        PLEI: {
+          Tokens: 0,
+        },
       },
       treasury: {
-        "PLEI": {
-          "Tokens": 0,
-        }
+        PLEI: {
+          Tokens: 0,
+        },
       },
     },
     dbJournal: {},
@@ -42,31 +42,33 @@ export default new Vuex.Store({
       state.epoch = state.epoch + 1;
     },
     gl(state, payload) {
-
-      if (typeof(state.dbGl[payload.gl][payload.creditccy]) == 'undefined') {
-        state.dbGl[payload.gl][payload.creditccy]={};
+      if (typeof state.dbGl[payload.gl][payload.creditccy] == "undefined") {
+        state.dbGl[payload.gl][payload.creditccy] = {};
         state.dbGl[payload.gl][payload.creditccy][payload.credit] = 0;
       }
-      if (typeof(state.dbGl[payload.gl][payload.debitccy]) == 'undefined') {
-        state.dbGl[payload.gl][payload.debitccy]={};
+      if (typeof state.dbGl[payload.gl][payload.debitccy] == "undefined") {
+        state.dbGl[payload.gl][payload.debitccy] = {};
         state.dbGl[payload.gl][payload.debitccy][payload.debit] = 0;
       }
-      state.dbGl[payload.gl][payload.creditccy][payload.credit] +=payload.creditamt;
-      state.dbGl[payload.gl][payload.debitccy][payload.debit] -= payload.debitamt;
+      state.dbGl[payload.gl][payload.creditccy][payload.credit] +=
+        payload.creditamt;
+      state.dbGl[payload.gl][payload.debitccy][payload.debit] -=
+        payload.debitamt;
       // Case of Multicurrency Transaction
-      if ( payload.debitccy != payload.creditccy) {        
-        if (payload.debitccy != 'USDC') {
-          if (isNaN(state.dbGl[payload.gl][payload.debitccy]['FX Exchange'])) {
-            state.dbGl[payload.gl][payload.debitccy]['FX Exchange']=0;
+      if (payload.debitccy != payload.creditccy) {
+        if (payload.debitccy != "USDC") {
+          if (isNaN(state.dbGl[payload.gl][payload.debitccy]["FX Exchange"])) {
+            state.dbGl[payload.gl][payload.debitccy]["FX Exchange"] = 0;
           }
-          state.dbGl[payload.gl][payload.debitccy]['FX Exchange'] -= payload.debitamt;
+          state.dbGl[payload.gl][payload.debitccy]["FX Exchange"] -=
+            payload.debitamt;
         }
-        if (payload.creditccy != 'USDC') {
-
-          if (isNaN(state.dbGl[payload.gl][payload.creditccy]['FX Exchange'])) {
-            state.dbGl[payload.gl][payload.creditccy]['FX Exchange']=0;
+        if (payload.creditccy != "USDC") {
+          if (isNaN(state.dbGl[payload.gl][payload.creditccy]["FX Exchange"])) {
+            state.dbGl[payload.gl][payload.creditccy]["FX Exchange"] = 0;
           }
-          state.dbGl[payload.gl][payload.creditccy]['FX Exchange'] += payload.creditamt;
+          state.dbGl[payload.gl][payload.creditccy]["FX Exchange"] +=
+            payload.creditamt;
         }
       }
       var txid = state.txid;
@@ -76,7 +78,8 @@ export default new Vuex.Store({
       state.dbJournal[txid]["ccy"] = payload.debitccy;
       state.dbJournal[txid]["dc"] = "d";
       state.dbJournal[txid]["amount"] = payload.debitamt;
-      state.dbJournal[txid]["balance"] =  state.dbGl[payload.gl][payload.debitccy][payload.debit] 
+      state.dbJournal[txid]["balance"] =
+        state.dbGl[payload.gl][payload.debitccy][payload.debit];
       state.dbJournal[txid]["date"] = Date.now();
       state.txid++;
       txid = state.txid;
@@ -86,11 +89,11 @@ export default new Vuex.Store({
       state.dbJournal[txid]["ccy"] = payload.creditccy;
       state.dbJournal[txid]["dc"] = "c";
       state.dbJournal[txid]["amount"] = payload.creditamt;
-      state.dbJournal[txid]["balance"] =  state.dbGl[payload.gl][payload.creditccy][payload.credit] ;
+      state.dbJournal[txid]["balance"] =
+        state.dbGl[payload.gl][payload.creditccy][payload.credit];
       state.dbJournal[txid]["date"] = Date.now();
       state.txid++;
     },
-
   },
   getters: {
     ledgers: (state) => {
@@ -101,6 +104,6 @@ export default new Vuex.Store({
     },
     epoch: (state) => {
       return Object.keys(state.epoch);
-    }
+    },
   },
 });

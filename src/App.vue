@@ -1,19 +1,22 @@
 <template>
+  <v-app>
   <div id="app">
     <h1>Money Creation Simulator (WIP)</h1>
     
-    <button v-on:click="runSimProxy(true)">Run Simulation</button>
-    <button v-on:click="runSimProxy(false)">Run Step</button>
-    <button v-on:click="showJournal()">ShowJournal</button>
-    <button v-if="!this.paused" v-on:click="pause">Pause</button>
-    <button v-if="this.paused" v-on:click="pause">Continue</button>
-    <button v-on:click="decelerate">-</button>Speed ({{ this.speed }})<button
-      v-on:click="accelerate"
-    >
-      +
-    </button>
-    <h3>Step {{ $store.state.epoch }} {{ this.currdate }} 
-    Tokens : {{ totalMoney }} </h3>
+    <v-btn v-on:click="runSimProxy(true)"> Run Simulation </v-btn>
+    <v-btn v-on:click="runSimProxy(false)"> Run Step </v-btn>
+    <v-btn v-on:click="showJournal(true)"> Show Journal </v-btn>
+    <v-btn v-if="!this.paused" v-on:click="pause"> Pause </v-btn>
+    <v-btn v-if="this.paused" v-on:click="pause"> Continue </v-btn>
+    
+    <div class="speed">Lag between updates:
+      <v-slider v-model="speed" hint="Speed" max="1000" min="10"></v-slider>
+    </div>
+    
+    <h3>
+      Step {{ $store.state.epoch }} {{ this.currdate }} Tokens :
+      {{ totalMoney }}
+    </h3>
     Amounts are in Millions
     <div id="NewStyle">
       <div>
@@ -37,8 +40,8 @@
         <Chart title="Plei Dao" gl="pleidao" width="300" height="200" />
       </div>
     </div>
-    
   </div>
+  </v-app>
 </template>
 
 <script>
@@ -55,7 +58,7 @@ export default {
   },
   data() {
     return {
-      speed: 1000,
+      speed: 500,
       speedinterval: 10,
       genesis: "2022-05-22T00:00:00.000Z",
       currdate: null,
@@ -77,18 +80,23 @@ export default {
         [...schedule].forEach((element) => {
           var start = new Date(Date.parse(element["Start Date"])).getTime();
           var end = new Date(Date.parse(element["End Date"])).getTime();
-          if (start == end ) { end = start + 2628000000}
+          if (start == end) {
+            end = start + 2628000000;
+          }
           //console.log("Check " + element.Item)
-          var price = element.Price
-          if ( start <= current && current <= end ) {
-            if ( price < 0 ) 
-            {
-             console.log("Market data to use: (" + this.$store.state.epoch + ") " + marketdata[this.$store.state.epoch].Price)
-             price=marketdata[this.$store.state.epoch].Price
-             
-             // console.log(marketdata)
-             // element.Price=marketdata[this.$store.state.epoch].Price
+          var price = element.Price;
+          if (start <= current && current <= end) {
+            if (price < 0) {
+              console.log(
+                "Market data to use: (" +
+                  this.$store.state.epoch +
+                  ") " +
+                  marketdata[this.$store.state.epoch].Price
+              );
+              price = marketdata[this.$store.state.epoch].Price;
 
+              // console.log(marketdata)
+              // element.Price=marketdata[this.$store.state.epoch].Price
             }
             rules[element.Event](this.$store, element.EventAmount, price);
             console.log(
@@ -96,13 +104,15 @@ export default {
                 " / " +
                 element.Event +
                 " Tokens: " +
-                element.EventAmount + " Price: " + price
+                element.EventAmount +
+                " Price: " +
+                price
             );
           }
         });
 
         this.$store.commit("dawn");
-        if (step) {          
+        if (step) {
           setTimeout(() => {
             this.runSimProxy(step);
           }, this.speed);
@@ -153,6 +163,12 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 10px;
+}
+
+.speed {
+ margin: auto;
+ margin-top: 1em;
+ width: 20em;
 }
 
 button {
