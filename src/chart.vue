@@ -4,15 +4,15 @@
       v-if="assetData.data.length > 0"
       v-bind:chartData="{
         ...chartData,
-        chartType: 'barChart' ,
-        selector: 'asset' + this.title ,
+        chartType: 'barChart',
+        selector: 'asset' + this.title,
         title: 'Assets',
         height: 120,
-        minX: 500 ,
+        minX: 500,
         overrides: {
           x: { ticks: 10 },
         },
-        ...assetData
+        ...assetData,
       }"
     ></v-chart>
 
@@ -20,26 +20,25 @@
       v-if="liabilityData.data.length > 0"
       v-bind:chartData="{
         ...chartData,
-        chartType: 'barChart' ,
-        selector: 'liab' + this.title ,
-        title: 'Liabilities' ,
+        chartType: 'barChart',
+        selector: 'liab' + this.title,
+        title: 'Liabilities',
         height: 120,
-        minX: 500 ,
+        minX: 500,
         overrides: {
-         x: { ticks: 10 },
-         palette: { fill: ['#922', '#ddd'] }
-      },
-      ...liabilityData
+          x: { ticks: 10 },
+          palette: { fill: ['#922', '#ddd'] },
+        },
+        ...liabilityData,
       }"
     ></v-chart>
   </div>
 </template>
 <script>
 export default {
-  //glData: store.$state,
   name: "example",
   props: ["title", "gl", "width", "height"],
-  data: function() {
+  data: function () {
     return {
       chartData: {
         chartType: "vBarChart",
@@ -47,17 +46,18 @@ export default {
         width: this.width,
         height: this.height,
         dim: "acc",
-        metric: "balance"
-      }
+        metric: "balance",
+      },
     };
   },
   computed: {
     graphData() {
       let gData = [];
       for (let account in this.$store.state.dbGl[this.gl]) {
+        
         gData.push({
           acc: account,
-          balance: this.$store.state.dbGl[this.gl][account]
+          balance: this.$store.state.dbGl[this.gl][account],
         });
       }
       return { data: gData };
@@ -65,10 +65,15 @@ export default {
     },
     assetData() {
       let gData = [];
-      for (let account in this.$store.state.dbGl[this.gl]) {
-        let balance = this.$store.state.dbGl[this.gl][account];
+      console.log("Ledgers:");
+      console.log(this.$store.state);
+      for (let account in this.$store.state.dbGl[this.gl]["USDC"]) {
+        console.log("Calculating " +  account)
+        let balance = this.$store.state.dbGl[this.gl]["USDC"][account];
         if (balance > 0) gData.push({ acc: account, balance: balance });
       }
+      console.log("Data for assets " );
+      console.log(JSON.stringify(gData));
       return { data: gData };
       //return this.$store.getters.moneyData;
     },
@@ -80,8 +85,8 @@ export default {
       }
       return { data: gData };
       //return this.$store.getters.moneyData;
-    }
-  }
+    },
+  },
 };
 </script>
 
