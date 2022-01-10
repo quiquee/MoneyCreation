@@ -7,29 +7,14 @@ export default new Vuex.Store({
   state: {
     dbGl: {
       community: {
-        PLEI: {
-          Tokens: 0,
-        },
       },
       investors: {
-        PLEI: {
-          Tokens: 0,
-        },
       },
       pleidao: {
-        PLEI: {
-          Tokens: 0,
-        },
       },
       plei: {
-        PLEI: {
-          Tokens: 0,
-        },
       },
       treasury: {
-        PLEI: {
-          Tokens: 0,
-        },
       },
     },
     dbJournal: {},
@@ -43,35 +28,29 @@ export default new Vuex.Store({
       state.epoch = state.epoch + 1;
     },
     saveHist(state) {
-      Object.keys(state.dbGl).forEach(glName => {        
-        Object.keys(state.dbGl[glName]).forEach(ccy => {
-          Object.keys(state.dbGl[glName][ccy]).forEach(account => {    
-            //eval(account)
-            console.log(glName + "," + ccy +"," + account )
+      Object.keys(state.dbGl).forEach( (glName) => {
+        ["USDC", "PLEI"].forEach(ccy => {
+          ["Tokens", "Cash"].forEach( (account) => {
+
+            console.log(glName + "," + ccy + "," + account)
+            if (typeof (state.dbGl[glName][ccy]) == 'undefined') {
+              state.dbGl[glName][ccy] = {};
+              ["Tokens", "Cash"].forEach( (accountInit) => { state.dbGl[glName][ccy][accountInit] = 0 })
+            }
             let balance = state.dbGl[glName][ccy][account]
-            //eval(balance)
-            console.log(glName + "," + ccy +"," + account +"," + ( isNaN(balance) ? 0 : balance ))
-            state.dbHistory.push([state.epoch,glName,ccy,account, ( isNaN(balance) ? 0 : balance )] );
+            state.dbHistory.push([state.epoch, glName, ccy, account, balance]);
           });
         });
       });
 
     },
+    initGl() {
+
+    }
+    ,
     gl(state, payload) {
 
-      if (typeof state.dbGl[payload.gl][payload.creditccy] == "undefined") {
-        state.dbGl[payload.gl][payload.creditccy] = {};
-      }
 
-      if (typeof state.dbGl[payload.gl][payload.debitccy] == "undefined") {
-        state.dbGl[payload.gl][payload.debitccy] = {};
-      }
-      if (isNaN(state.dbGl[payload.gl][payload.debitccy][payload.debit])) {
-        state.dbGl[payload.gl][payload.debitccy][payload.debit] = 0;
-      }
-      if (isNaN(state.dbGl[payload.gl][payload.creditccy][payload.credit])) {
-        state.dbGl[payload.gl][payload.creditccy][payload.credit] = 0
-      }
       state.dbGl[payload.gl][payload.creditccy][payload.credit] +=
         payload.creditamt;
       state.dbGl[payload.gl][payload.debitccy][payload.debit] -=

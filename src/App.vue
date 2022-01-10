@@ -94,6 +94,7 @@ export default {
         this.currdate.getMonth() + this.$store.state.epoch
       );
       var current = this.currdate.getTime();
+      this.$store.commit("saveHist", this.$store.state);
       if (!this.paused) {
         [...schedule].forEach((element) => {
           var start = new Date(Date.parse(element["Start Date"])).getTime();
@@ -128,7 +129,7 @@ export default {
             );
           }
         });
-        this.$store.commit("saveHist", this.$store.state);
+        
         this.$store.commit("dawn");
         if (step &&  (this.$store.state.epoch <= 70 )) {
           setTimeout(() => {
