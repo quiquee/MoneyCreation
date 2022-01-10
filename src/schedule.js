@@ -1,3 +1,14 @@
+export const schedule_TEST = [
+  {
+    Item: "Acquisition",
+    Event: "PublicSale",
+    "Start Date": "22 May 2022",
+    "End Date": "22 Apr 2024",
+    EventAmount: 1333333.333,
+    Price: -1,
+  },
+];
+
 export const schedule = [
   {
     Item: "Acquisition",

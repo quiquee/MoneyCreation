@@ -1,6 +1,6 @@
 <template>
   <div class="ledger">
-    <h1>{{ title }} ( {{ gl }} )</h1>
+    <h1>{{ title }}</h1>
     <div v-for="(ccy, accasd) in this.$store.state.dbGl[gl]" :key="accasd">
       <div>{{ accasd }}</div>
       <div v-for="(amount, account) in ccy" :key="account">
@@ -47,6 +47,7 @@ h1 {
   text-align: left;
   font-size: 14px;
   width: 200px;
+  min-height: 13em;
   margin-left: 10px;
   margin-top: 10px;
   margin-bottom: 10px;

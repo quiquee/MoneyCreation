@@ -65,15 +65,13 @@ export default {
     },
     assetData() {
       let gData = [];
-      console.log("Ledgers:");
-      console.log(this.$store.state);
       for (let account in this.$store.state.dbGl[this.gl]["USDC"]) {
-        console.log("Calculating " +  account)
+        //console.log("Calculating " +  account)
         let balance = this.$store.state.dbGl[this.gl]["USDC"][account];
         if (balance > 0) gData.push({ acc: account, balance: balance });
       }
-      console.log("Data for assets " );
-      console.log(JSON.stringify(gData));
+      //console.log("Data for assets " );
+      //console.log(JSON.stringify(gData));
       return { data: gData };
       //return this.$store.getters.moneyData;
     },

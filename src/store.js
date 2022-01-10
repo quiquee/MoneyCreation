@@ -1,9 +1,11 @@
+/* eslint-disable */
 import Vue from "vue";
 import Vuex from "vuex";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+
   state: {
     dbGl: {
       community: {
@@ -22,21 +24,16 @@ export default new Vuex.Store({
     moneyAccounts: ["Tokens"],
     txid: 0,
     epoch: 0,
+
   },
   mutations: {
     dawn(state) {
       state.epoch = state.epoch + 1;
     },
     saveHist(state) {
-      Object.keys(state.dbGl).forEach( (glName) => {
-        ["USDC", "PLEI"].forEach(ccy => {
-          ["Tokens", "Cash"].forEach( (account) => {
-
-            console.log(glName + "," + ccy + "," + account)
-            if (typeof (state.dbGl[glName][ccy]) == 'undefined') {
-              state.dbGl[glName][ccy] = {};
-              ["Tokens", "Cash"].forEach( (accountInit) => { state.dbGl[glName][ccy][accountInit] = 0 })
-            }
+      Object.keys(state.dbGl).forEach((glName) => {
+        ["USDC", "PLEI"].forEach((ccy) => {
+          ["Tokens", "Cash", "PL", "Equity"].forEach((account) => {
             let balance = state.dbGl[glName][ccy][account]
             state.dbHistory.push([state.epoch, glName, ccy, account, balance]);
           });
@@ -44,35 +41,41 @@ export default new Vuex.Store({
       });
 
     },
-    initGl() {
-
-    }
-    ,
+    initGl(state) {
+      const arrayCcy = ["USDC", "PLEI"];
+      const arrayAcc= ["Tokens", "Cash", "PL", "Equity"] 
+      
+      arrayAcc.forEach( acc => { console.log("Tthis_ " + acc )})
+      Object.keys(state.dbGl).forEach((glName) => {
+        arrayCcy.forEach(ccy => {
+          Vue.set(state.dbGl[glName], ccy, {})
+          arrayAcc.forEach(account => {
+            Vue.set(state.dbGl[glName][ccy], account, 0)
+          });
+        });
+      })
+    },
     gl(state, payload) {
-
 
       state.dbGl[payload.gl][payload.creditccy][payload.credit] +=
         payload.creditamt;
       state.dbGl[payload.gl][payload.debitccy][payload.debit] -=
         payload.debitamt;
+
       // Case of Multicurrency Transaction
+      
       if (payload.debitccy != payload.creditccy) {
         if (payload.debitccy != "USDC") {
-          if (isNaN(state.dbGl[payload.gl][payload.debitccy]["FX Exchange"])) {
-            state.dbGl[payload.gl][payload.debitccy]["FX Exchange"] = 0;
-          }
+
           state.dbGl[payload.gl][payload.debitccy]["FX Exchange"] -=
             payload.debitamt;
         }
         if (payload.creditccy != "USDC") {
-          if (isNaN(state.dbGl[payload.gl][payload.creditccy]["FX Exchange"])) {
-            state.dbGl[payload.gl][payload.creditccy]["FX Exchange"] = 0;
-          }
           state.dbGl[payload.gl][payload.creditccy]["FX Exchange"] +=
             payload.creditamt;
         }
       }
-
+      
       var txid = state.txid;
       state.dbJournal[txid] = {};
       state.dbJournal[txid]["gl"] = payload.gl;

@@ -5,7 +5,7 @@
 
       <v-btn v-on:click="runSimProxy(true)"> Run Simulation </v-btn>
       <v-btn v-on:click="runSimProxy(false)"> Run Step </v-btn>
-      <v-btn v-on:click="showHistory(true)"> Show Result </v-btn>
+      <v-btn v-on:click="showHistory(true)"> Download Results </v-btn>
       <v-btn v-if="!this.paused" v-on:click="pause"> Pause </v-btn>
       <v-btn v-if="this.paused" v-on:click="pause"> Continue </v-btn>
 
@@ -18,25 +18,25 @@
         Step {{ $store.state.epoch }} {{ this.currdate }} Tokens :
         {{ totalMoney }}
       </h3>
-      Amounts are in Millions
-      <div id="NewStyle">
-        <div>
+      Amounts are in Millions</p>
+      <div class="cards">
+        <div class="cards">
           <Ledger title="Treasury" gl="treasury" />
           <Chart title="Plei" gl="plei" width="300" height="200" />
         </div>
-        <div>
+        <div class="cards">
           <Ledger title="Community" gl="community" />
           <Chart title="Community" gl="community" width="300" height="200" />
         </div>
-        <div>
+        <div class="cards">
           <Ledger title="Investors" gl="investors" />
           <Chart title="Community" gl="community" width="300" height="200" />
         </div>
-        <div>
+        <div class="cards">
           <Ledger title="Plei Dao" gl="pleidao" />
           <Chart title="Plei Dao" gl="pleidao" width="300" height="200" />
         </div>
-        <div>
+        <div class="cards">
           <Ledger title="Plei Team" gl="plei" />
           <Chart title="Plei Dao" gl="pleidao" width="300" height="200" />
         </div>
@@ -89,12 +89,13 @@ export default {
     },
 
     runSimProxy: function (step) {
+     if ( this.$store.state.epoch == 0 ) { this.$store.commit("initGl", this.$store.state); }
       this.currdate = new Date(this.genesis);
       this.currdate.setMonth(
         this.currdate.getMonth() + this.$store.state.epoch
-      );
+      )
       var current = this.currdate.getTime();
-      this.$store.commit("saveHist", this.$store.state);
+      
       if (!this.paused) {
         [...schedule].forEach((element) => {
           var start = new Date(Date.parse(element["Start Date"])).getTime();
@@ -129,7 +130,7 @@ export default {
             );
           }
         });
-        
+        this.$store.commit("saveHist",this.$store.state);
         this.$store.commit("dawn");
         if (step &&  (this.$store.state.epoch <= 70 )) {
           setTimeout(() => {
@@ -161,7 +162,7 @@ export default {
       let money = 0;
       let ledgers = this.$store.getters.ledgers;
 
-      for (let i = 0; i < ledgers.length; i++) {
+        for (let i = 0; i < ledgers.length; i++) {
         for (let account in this.$store.state.dbGl[ledgers[i]]) {
           var balance = this.$store.state.dbGl[ledgers[i]][account];
           if (this.$store.state.moneyAccounts.indexOf(account) > -1)
@@ -179,13 +180,13 @@ export default {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+   margin-left: 2em;
   color: #2c3e50;
   margin-top: 10px;
 }
 
 .speed {
-  margin: auto;
+  margin-left: 2em;
   margin-top: 1em;
   width: 20em;
 }
@@ -194,5 +195,9 @@ button {
   border-style: line;
   margin-left: 0em;
   padding: 0.2em;
+}
+
+.cards {
+  display: inline;
 }
 </style>

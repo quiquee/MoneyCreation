@@ -16,7 +16,7 @@ export const rules = {
       debit: "Tokens",
       debitamt: amt,
       creditccy: "USDC",
-      credit: "Token Sale Public",
+      credit: "PL",
       creditamt: amt * market(price),
       price: price,
     });
@@ -24,7 +24,7 @@ export const rules = {
     store.commit("gl", {
       gl: "community",
       debitccy: "USDC",
-      debit: "Token Purchase",
+      debit: "PL",
       debitamt: amt * market(price),
       creditccy: "PLEI",
       credit: "Tokens",
@@ -60,7 +60,7 @@ export const rules = {
       credit: "Tokens",
       creditccy: "PLEI",
       creditamt: amt,
-      debit: "Revenue Distribution",
+      debit: "PL",
       debitccy: "USDC",
       debitamt: amt * market(price),      
     });
