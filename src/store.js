@@ -33,6 +33,7 @@ export default new Vuex.Store({
       },
     },
     dbJournal: {},
+    dbHistory: [],
     moneyAccounts: ["Tokens"],
     txid: 0,
     epoch: 0,
@@ -41,14 +42,35 @@ export default new Vuex.Store({
     dawn(state) {
       state.epoch = state.epoch + 1;
     },
+    saveHist(state) {
+      Object.keys(state.dbGl).forEach(glName => {        
+        Object.keys(state.dbGl[glName]).forEach(ccy => {
+          Object.keys(state.dbGl[glName][ccy]).forEach(account => {    
+            //eval(account)
+            console.log(glName + "," + ccy +"," + account )
+            let balance = state.dbGl[glName][ccy][account]
+            //eval(balance)
+            console.log(glName + "," + ccy +"," + account +"," + ( isNaN(balance) ? 0 : balance ))
+            state.dbHistory.push([state.epoch,glName,ccy,account, ( isNaN(balance) ? 0 : balance )] );
+          });
+        });
+      });
+
+    },
     gl(state, payload) {
+
       if (typeof state.dbGl[payload.gl][payload.creditccy] == "undefined") {
         state.dbGl[payload.gl][payload.creditccy] = {};
-        state.dbGl[payload.gl][payload.creditccy][payload.credit] = 0;
       }
+
       if (typeof state.dbGl[payload.gl][payload.debitccy] == "undefined") {
         state.dbGl[payload.gl][payload.debitccy] = {};
+      }
+      if (isNaN(state.dbGl[payload.gl][payload.debitccy][payload.debit])) {
         state.dbGl[payload.gl][payload.debitccy][payload.debit] = 0;
+      }
+      if (isNaN(state.dbGl[payload.gl][payload.creditccy][payload.credit])) {
+        state.dbGl[payload.gl][payload.creditccy][payload.credit] = 0
       }
       state.dbGl[payload.gl][payload.creditccy][payload.credit] +=
         payload.creditamt;
@@ -71,6 +93,7 @@ export default new Vuex.Store({
             payload.creditamt;
         }
       }
+
       var txid = state.txid;
       state.dbJournal[txid] = {};
       state.dbJournal[txid]["gl"] = payload.gl;

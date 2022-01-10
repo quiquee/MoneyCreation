@@ -101,7 +101,7 @@ export const schedule = [
     "Start Date": "22 May 2022",
     "End Date": "22 May 2022",
     EventAmount: 2000000,
-    Price: 0.04,
+    Price: 0.04
   },
   {
     Item: "Private Sale TGE",

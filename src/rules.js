@@ -61,9 +61,8 @@ export const rules = {
       creditccy: "PLEI",
       creditamt: amt,
       debit: "Revenue Distribution",
-      debitccy: "PLEI",
-      debitamt: amt,
-      price: price,
+      debitccy: "USDC",
+      debitamt: amt * market(price),      
     });
     // Accounting in the DAO
     store.commit("gl", {
@@ -102,6 +101,10 @@ export const rules = {
 };
 
 function market(price) {
+  if (isNaN(price)) {
+    console.log("Price is not a number");
+    return -999;
+  }
   if (price < 0) {
     return 0.08;
   }

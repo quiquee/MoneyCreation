@@ -1,46 +1,47 @@
 <template>
   <v-app>
-  <div id="app">
-    <h1>Money Creation Simulator (WIP)</h1>
-    
-    <v-btn v-on:click="runSimProxy(true)"> Run Simulation </v-btn>
-    <v-btn v-on:click="runSimProxy(false)"> Run Step </v-btn>
-    <v-btn v-on:click="showJournal(true)"> Show Journal </v-btn>
-    <v-btn v-if="!this.paused" v-on:click="pause"> Pause </v-btn>
-    <v-btn v-if="this.paused" v-on:click="pause"> Continue </v-btn>
-    
-    <div class="speed">Lag between updates:
-      <v-slider v-model="speed" hint="Speed" max="1000" min="10"></v-slider>
+    <div id="app">
+      <h1>Money Creation Simulator (WIP)</h1>
+
+      <v-btn v-on:click="runSimProxy(true)"> Run Simulation </v-btn>
+      <v-btn v-on:click="runSimProxy(false)"> Run Step </v-btn>
+      <v-btn v-on:click="showHistory(true)"> Show Result </v-btn>
+      <v-btn v-if="!this.paused" v-on:click="pause"> Pause </v-btn>
+      <v-btn v-if="this.paused" v-on:click="pause"> Continue </v-btn>
+
+      <div class="speed">
+        Lag between updates:
+        <v-slider v-model="speed" hint="Speed" max="1000" min="10"></v-slider>
+      </div>
+
+      <h3>
+        Step {{ $store.state.epoch }} {{ this.currdate }} Tokens :
+        {{ totalMoney }}
+      </h3>
+      Amounts are in Millions
+      <div id="NewStyle">
+        <div>
+          <Ledger title="Treasury" gl="treasury" />
+          <Chart title="Plei" gl="plei" width="300" height="200" />
+        </div>
+        <div>
+          <Ledger title="Community" gl="community" />
+          <Chart title="Community" gl="community" width="300" height="200" />
+        </div>
+        <div>
+          <Ledger title="Investors" gl="investors" />
+          <Chart title="Community" gl="community" width="300" height="200" />
+        </div>
+        <div>
+          <Ledger title="Plei Dao" gl="pleidao" />
+          <Chart title="Plei Dao" gl="pleidao" width="300" height="200" />
+        </div>
+        <div>
+          <Ledger title="Plei Team" gl="plei" />
+          <Chart title="Plei Dao" gl="pleidao" width="300" height="200" />
+        </div>
+      </div>
     </div>
-    
-    <h3>
-      Step {{ $store.state.epoch }} {{ this.currdate }} Tokens :
-      {{ totalMoney }}
-    </h3>
-    Amounts are in Millions
-    <div id="NewStyle">
-      <div>
-        <Ledger title="Treasury" gl="treasury" />
-        <Chart title="Plei" gl="plei" width="300" height="200" />
-      </div>
-      <div>
-        <Ledger title="Community" gl="community" />
-        <Chart title="Community" gl="community" width="300" height="200" />
-      </div>
-      <div>
-        <Ledger title="Investors" gl="investors" />
-        <Chart title="Community" gl="community" width="300" height="200" />
-      </div>
-      <div>
-        <Ledger title="Plei Dao" gl="pleidao" />
-        <Chart title="Plei Dao" gl="pleidao" width="300" height="200" />
-      </div>
-      <div>
-        <Ledger title="Plei Team" gl="plei" />
-        <Chart title="Plei Dao" gl="pleidao" width="300" height="200" />
-      </div>
-    </div>
-  </div>
   </v-app>
 </template>
 
@@ -66,8 +67,25 @@ export default {
     };
   },
   methods: {
-    showJournal: function () {
-      console.log(this.$store.state.dbJournal);
+    showHistory: function () {
+      let historycontent= "epoch,gl,ccy,account,balance\n" ;
+      this.$store.state.dbHistory.forEach( histElement => {
+        historycontent += histElement.join() + "\n";
+      });
+      console.log(this.$store.state.dbHistory);
+      var a = document.createElement("a");
+      let filename = "export.csv";
+      let contentType = "application/csv;charset=utf-8;";
+      a.download = filename;
+      a.href =
+        "data:" +
+        contentType +
+        "," +
+        historycontent;
+      a.target = "_blank";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     },
 
     runSimProxy: function (step) {
@@ -110,9 +128,9 @@ export default {
             );
           }
         });
-
+        this.$store.commit("saveHist", this.$store.state);
         this.$store.commit("dawn");
-        if (step) {
+        if (step &&  (this.$store.state.epoch <= 70 )) {
           setTimeout(() => {
             this.runSimProxy(step);
           }, this.speed);
@@ -166,9 +184,9 @@ export default {
 }
 
 .speed {
- margin: auto;
- margin-top: 1em;
- width: 20em;
+  margin: auto;
+  margin-top: 1em;
+  width: 20em;
 }
 
 button {
