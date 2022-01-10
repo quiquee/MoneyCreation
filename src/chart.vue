@@ -1,98 +1,52 @@
 <template>
-  <div class="graph">
-    <v-chart
-      v-if="assetData.data.length > 0"
-      v-bind:chartData="{
-        ...chartData,
-        chartType: 'barChart',
-        selector: 'asset' + this.title,
-        title: 'Assets',
-        height: 120,
-        minX: 500,
-        overrides: {
-          x: { ticks: 10 },
-        },
-        ...assetData,
-      }"
-    ></v-chart>
-
-    <v-chart
-      v-if="liabilityData.data.length > 0"
-      v-bind:chartData="{
-        ...chartData,
-        chartType: 'barChart',
-        selector: 'liab' + this.title,
-        title: 'Liabilities',
-        height: 120,
-        minX: 500,
-        overrides: {
-          x: { ticks: 10 },
-          palette: { fill: ['#922', '#ddd'] },
-        },
-        ...liabilityData,
-      }"
-    ></v-chart>
+  <div class="small">
+    <line-chart :chart-data="datacollection"></line-chart>
+    <button @click="fillData()">Randomize</button>
   </div>
 </template>
+
 <script>
-export default {
-  name: "example",
-  props: ["title", "gl", "width", "height"],
-  data: function () {
-    return {
-      chartData: {
-        chartType: "vBarChart",
-        title: this.title,
-        width: this.width,
-        height: this.height,
-        dim: "acc",
-        metric: "balance",
+  import LineChart from './LineChart.js'
+
+  export default {
+    components: {
+      LineChart
+    },
+    data () {
+      return {
+        datacollection: null
+      }
+    },
+    mounted () {
+      this.fillData()
+    },
+    methods: {
+      fillData () {
+        this.datacollection = {
+          labels: [this.getRandomInt(), this.getRandomInt()],
+          datasets: [
+            {
+              label: 'Data One',
+              backgroundColor: '#f87979',
+              data: [this.getRandomInt(), this.getRandomInt()]
+            }, {
+              label: 'Data One',
+              backgroundColor: '#f87979',
+              data: [this.getRandomInt(), this.getRandomInt()]
+            }
+          ]
+        }
       },
-    };
-  },
-  computed: {
-    graphData() {
-      let gData = [];
-      for (let account in this.$store.state.dbGl[this.gl]) {
-        
-        gData.push({
-          acc: account,
-          balance: this.$store.state.dbGl[this.gl][account],
-        });
+      getRandomInt () {
+        return Math.floor(Math.random() * (50 - 5 + 1)) + 5
       }
-      return { data: gData };
-      //return this.$store.getters.moneyData;
-    },
-    assetData() {
-      let gData = [];
-      for (let account in this.$store.state.dbGl[this.gl]["USDC"]) {
-        //console.log("Calculating " +  account)
-        let balance = this.$store.state.dbGl[this.gl]["USDC"][account];
-        if (balance > 0) gData.push({ acc: account, balance: balance });
-      }
-      //console.log("Data for assets " );
-      //console.log(JSON.stringify(gData));
-      return { data: gData };
-      //return this.$store.getters.moneyData;
-    },
-    liabilityData() {
-      let gData = [];
-      for (let account in this.$store.state.dbGl[this.gl]) {
-        let balance = this.$store.state.dbGl[this.gl][account];
-        if (balance < 0) gData.push({ acc: account, balance: -balance });
-      }
-      return { data: gData };
-      //return this.$store.getters.moneyData;
-    },
-  },
-};
+    }
+  }
 </script>
 
 <style>
-.graph {
-  display: inline-block;
-  *display: inline;
-  margin-left: 20px;
-  vertical-align: bottom;
-}
+  .small {
+    max-width: 600px;
+    margin:  150px auto;
+  }
 </style>

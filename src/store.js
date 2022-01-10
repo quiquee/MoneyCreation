@@ -33,7 +33,7 @@ export default new Vuex.Store({
     saveHist(state) {
       Object.keys(state.dbGl).forEach((glName) => {
         ["USDC", "PLEI"].forEach((ccy) => {
-          ["Tokens", "Cash", "PL", "Equity"].forEach((account) => {
+          ["Tokens", "Cash", "PL", "Equity","Stake","ClientStake"].forEach((account) => {
             let balance = state.dbGl[glName][ccy][account]
             state.dbHistory.push([state.epoch, glName, ccy, account, balance]);
           });
@@ -43,9 +43,8 @@ export default new Vuex.Store({
     },
     initGl(state) {
       const arrayCcy = ["USDC", "PLEI"];
-      const arrayAcc= ["Tokens", "Cash", "PL", "Equity"] 
-      
-      arrayAcc.forEach( acc => { console.log("Tthis_ " + acc )})
+      const arrayAcc= ["Tokens", "Cash", "PL", "Equity","Stake","ClientStake"] 
+            
       Object.keys(state.dbGl).forEach((glName) => {
         arrayCcy.forEach(ccy => {
           Vue.set(state.dbGl[glName], ccy, {})
@@ -55,8 +54,8 @@ export default new Vuex.Store({
         });
       })
     },
+    
     gl(state, payload) {
-
       state.dbGl[payload.gl][payload.creditccy][payload.credit] +=
         payload.creditamt;
       state.dbGl[payload.gl][payload.debitccy][payload.debit] -=

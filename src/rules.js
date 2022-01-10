@@ -1,13 +1,26 @@
-export const rules = {
-  mint: function (store, amt) {
-    // Accounting in the DAO
-    store.commit("gl", {
-      gl: "pleidao",
-      credit: "Tokens",
-      debit: "Capital",
-      amount: amt,
-    });
+export const coa = {
+  Tokens: {
+    type: "asset",    
   },
+  Cash: {
+    type: "asset",    
+  },
+  Stake: {
+    type: "asset",    
+  },
+  PL: {
+    type: "liability",
+  },
+  ClientStake: {
+    type: "liability",    
+  },
+  Equity: {
+    type: "liability",  
+  },
+}
+
+export const rules = {
+
   PublicSale: function (store, amt, price) {
     // Accounting in the DAO amount is in tokens
     store.commit("gl", {
@@ -98,7 +111,54 @@ export const rules = {
       debitamt: amt,
     });
   },
+  PrivateStaking: function (store, amt, price) {
+    amt = derive(store,amt)
+    // Accounting for Investors
+    store.commit("gl", {
+      gl: "investors",
+      debit: "Tokens",
+      debitccy: "PLEI",
+      debitamt: amt ,
+      credit: "Stake",
+      creditccy: "PLEI",
+      creditamt: amt,
+    });
+    // Accounting in Treasury
+    store.commit("gl", {
+      gl: "treasury",
+      credit: "Stake",
+      creditccy: "PLEI",
+      creditamt: amt ,
+      debit: "ClientStake",
+      debitccy: "PLEI",
+      debitamt: amt,
+    });
+  },
+  Revenue: function (store, amt, price) {
+    amt = derive(store,amt)
+    // Accounting in Treasury
+    store.commit("gl", {
+      gl: "treasury",
+      credit: "Cash",
+      creditccy: "USDC",
+      creditamt: amt ,
+      debit: "PL",
+      debitccy: "USDC",
+      debitamt: amt,
+    });
+  },
+
+
 };
+function derive(store,amt){
+  if (isNaN(amt)){
+    let newamt = eval("store.state.dbGl." + amt) ;    
+    console.log("Evaled to store.state.dbGl."+  amt + " = " + newamt );
+    
+    return newamt
+  }
+  return amt
+}
 
 function market(price) {
   if (isNaN(price)) {

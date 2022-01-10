@@ -1,4 +1,4 @@
-export const schedule_TEST = [
+export const schedule_test = [
   {
     Item: "Acquisition",
     Event: "PublicSale",
@@ -7,6 +7,23 @@ export const schedule_TEST = [
     EventAmount: 1333333.333,
     Price: -1,
   },
+  {
+    Item: "Staking from Investors",
+    Event: "PrivateStaking",
+    "Start Date": "22 May 2022",
+    "End Date": "22 Apr 2030",
+    EventAmount: "investors.PLEI.Tokens * 0.01",
+    Price: -1,
+  },
+  {
+    Item: "Revenue based on PrivateStake",
+    Event: "Revenue",
+    "Start Date": "22 May 2022",
+    "End Date": "22 Apr 2030",
+    EventAmount: "investors.PLEI.Stake * 0.1",
+    Price: -1,
+  },
+  
 ];
 
 export const schedule = [
@@ -160,6 +177,22 @@ export const schedule = [
     "Start Date": "22 Nov 2023",
     "End Date": "22 Apr 2025",
     EventAmount: 8333333.333,
+    Price: -1,
+  },
+  {
+    Item: "Staking from Investors",
+    Event: "PrivateStaking",
+    "Start Date": "22 May 2022",
+    "End Date": "22 Apr 2030",
+    EventAmount: "investors.PLEI.Tokens * 0.01",
+    Price: -1,
+  },
+  {
+    Item: "Revenue based on PrivateStake",
+    Event: "Revenue",
+    "Start Date": "22 May 2022",
+    "End Date": "22 Apr 2030",
+    EventAmount: "investors.PLEI.Stake * 0.1",
     Price: -1,
   },
 ];

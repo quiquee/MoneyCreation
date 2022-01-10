@@ -6,6 +6,7 @@
       <v-btn v-on:click="runSimProxy(true)"> Run Simulation </v-btn>
       <v-btn v-on:click="runSimProxy(false)"> Run Step </v-btn>
       <v-btn v-on:click="showHistory(true)"> Download Results </v-btn>
+      <v-btn v-on:click="showChart()"> Chart </v-btn>
       <v-btn v-if="!this.paused" v-on:click="pause"> Pause </v-btn>
       <v-btn v-if="this.paused" v-on:click="pause"> Continue </v-btn>
 
@@ -18,29 +19,26 @@
         Step {{ $store.state.epoch }} {{ this.currdate }} Tokens :
         {{ totalMoney }}
       </h3>
-      Amounts are in Millions</p>
+      Amounts are in Millions<p></p>
       <div class="cards">
         <div class="cards">
           <Ledger title="Treasury" gl="treasury" />
-          <Chart title="Plei" gl="plei" width="300" height="200" />
+          
         </div>
         <div class="cards">
           <Ledger title="Community" gl="community" />
-          <Chart title="Community" gl="community" width="300" height="200" />
-        </div>
+         </div>
         <div class="cards">
           <Ledger title="Investors" gl="investors" />
-          <Chart title="Community" gl="community" width="300" height="200" />
-        </div>
+         </div>
         <div class="cards">
           <Ledger title="Plei Dao" gl="pleidao" />
-          <Chart title="Plei Dao" gl="pleidao" width="300" height="200" />
-        </div>
+          </div>
         <div class="cards">
           <Ledger title="Plei Team" gl="plei" />
-          <Chart title="Plei Dao" gl="pleidao" width="300" height="200" />
         </div>
       </div>
+      <line-chart :chart-data="chartdata"></line-chart>
     </div>
   </v-app>
 </template>
@@ -49,13 +47,14 @@
 import Ledger from "./ledger";
 import { rules } from "./rules.js";
 import { marketdata } from "./market.js";
-import Chart from "./chart";
+import LineChart from "./LineChart";
 import { schedule } from "./schedule.js";
+
 export default {
   name: "app",
   components: {
     Ledger,
-    Chart,
+    LineChart,
   },
   data() {
     return {
@@ -64,12 +63,40 @@ export default {
       genesis: "2022-05-22T00:00:00.000Z",
       currdate: null,
       paused: false,
+      chartdata: null,
+      gradient: null,
     };
   },
   methods: {
+    showChart: function () {
+      console.log("Show chart")
+      this.chartdata = {
+        labels: [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ],
+        datasets: [
+          {
+            label: "Data One",
+            backgroundColor: '#f87979',
+            data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11],
+          },
+        ],
+      };
+    },
     showHistory: function () {
-      let historycontent= "epoch,gl,ccy,account,balance\n" ;
-      this.$store.state.dbHistory.forEach( histElement => {
+      let historycontent = "epoch,gl,ccy,account,balance\n";
+      this.$store.state.dbHistory.forEach((histElement) => {
         historycontent += histElement.join() + "\n";
       });
       console.log(this.$store.state.dbHistory);
@@ -77,11 +104,7 @@ export default {
       let filename = "export.csv";
       let contentType = "application/csv;charset=utf-8;";
       a.download = filename;
-      a.href =
-        "data:" +
-        contentType +
-        "," +
-        historycontent;
+      a.href = "data:" + contentType + "," + historycontent;
       a.target = "_blank";
       document.body.appendChild(a);
       a.click();
@@ -89,13 +112,19 @@ export default {
     },
 
     runSimProxy: function (step) {
-     if ( this.$store.state.epoch == 0 ) { this.$store.commit("initGl", this.$store.state); }
+      if (this.$store.state.epoch == 0) {
+        this.$store.commit("initGl", this.$store.state);
+        Object.keys(rules).forEach( rule => {
+          console.log("Initializing rule: " + rule)
+          rules[rule](this.$store, 0, 0 )
+        })
+      }
       this.currdate = new Date(this.genesis);
       this.currdate.setMonth(
         this.currdate.getMonth() + this.$store.state.epoch
-      )
+      );
       var current = this.currdate.getTime();
-      
+
       if (!this.paused) {
         [...schedule].forEach((element) => {
           var start = new Date(Date.parse(element["Start Date"])).getTime();
@@ -106,13 +135,7 @@ export default {
           //console.log("Check " + element.Item)
           var price = element.Price;
           if (start <= current && current <= end) {
-            if (price < 0) {
-              console.log(
-                "Market data to use: (" +
-                  this.$store.state.epoch +
-                  ") " +
-                  marketdata[this.$store.state.epoch].Price
-              );
+            if (price < 0) {              
               price = marketdata[this.$store.state.epoch].Price;
 
               // console.log(marketdata)
@@ -130,9 +153,9 @@ export default {
             );
           }
         });
-        this.$store.commit("saveHist",this.$store.state);
+        this.$store.commit("saveHist", this.$store.state);
         this.$store.commit("dawn");
-        if (step &&  (this.$store.state.epoch <= 70 )) {
+        if (step && this.$store.state.epoch <= 70) {
           setTimeout(() => {
             this.runSimProxy(step);
           }, this.speed);
@@ -162,7 +185,7 @@ export default {
       let money = 0;
       let ledgers = this.$store.getters.ledgers;
 
-        for (let i = 0; i < ledgers.length; i++) {
+      for (let i = 0; i < ledgers.length; i++) {
         for (let account in this.$store.state.dbGl[ledgers[i]]) {
           var balance = this.$store.state.dbGl[ledgers[i]][account];
           if (this.$store.state.moneyAccounts.indexOf(account) > -1)
@@ -180,7 +203,7 @@ export default {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-   margin-left: 2em;
+  margin-left: 2em;
   color: #2c3e50;
   margin-top: 10px;
 }

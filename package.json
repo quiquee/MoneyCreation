@@ -9,15 +9,18 @@
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",
+    "chart.js": "2.9.4",
     "core-js": "^3.6.5",
     "v-chart": "^1.0.0",
     "v-chart-plugin": "^1.0.1",
     "vue": "^2.6.11",
+    "vue-chartjs": "^3.5.1",
+    
     "vuetify": "^2.6.2",
     "vuex": "^3.4.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",    
+    "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "html-webpack-plugin": "^5.5.0",
