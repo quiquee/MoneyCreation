@@ -77,7 +77,9 @@ export default new Vuex.Store({
       
       var txid = state.txid;
       state.dbJournal[txid] = {};
+      state.dbJournal[txid]["epoch"] = state.epoch;
       state.dbJournal[txid]["gl"] = payload.gl;
+      state.dbJournal[txid]["concept"] = payload.concept;
       state.dbJournal[txid]["account"] = payload.debit;
       state.dbJournal[txid]["ccy"] = payload.debitccy;
       state.dbJournal[txid]["dc"] = "d";
@@ -88,7 +90,9 @@ export default new Vuex.Store({
       state.txid++;
       txid = state.txid;
       state.dbJournal[txid] = {};
+      state.dbJournal[txid]["epoch"] = state.epoch;
       state.dbJournal[txid]["gl"] = payload.gl;
+      state.dbJournal[txid]["concept"] = payload.concept;
       state.dbJournal[txid]["account"] = payload.credit;
       state.dbJournal[txid]["ccy"] = payload.creditccy;
       state.dbJournal[txid]["dc"] = "c";

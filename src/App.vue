@@ -6,6 +6,7 @@
       <v-btn v-on:click="runSimProxy(true)"> Run Simulation </v-btn>
       <v-btn v-on:click="runSimProxy(false)"> Run Step </v-btn>
       <v-btn v-on:click="showHistory(true)"> Download Results </v-btn>
+      <v-btn v-on:click="showJournals(true)"> Download Journals </v-btn>
       <v-btn v-on:click="showChart()"> Chart </v-btn>
       <v-btn v-if="!this.paused" v-on:click="pause"> Pause </v-btn>
       <v-btn v-if="this.paused" v-on:click="pause"> Continue </v-btn>
@@ -47,7 +48,7 @@
 import Ledger from "./ledger";
 import { rules } from "./rules.js";
 import { marketdata } from "./market.js";
-import LineChart from "./LineChart";
+import LineChart from "./gchart";
 import { schedule } from "./schedule.js";
 
 export default {
@@ -68,38 +69,11 @@ export default {
     };
   },
   methods: {
-    showChart: function () {
-      console.log("Show chart")
-      this.chartdata = {
-        labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ],
-        datasets: [
-          {
-            label: "Data One",
-            backgroundColor: '#f87979',
-            data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11],
-          },
-        ],
-      };
-    },
     showHistory: function () {
-      let historycontent = "epoch,gl,ccy,account,balance\n";
+      let historycontent = "epoch,gl,concept,account,ccy,amount\n";
       this.$store.state.dbHistory.forEach((histElement) => {
-        historycontent += histElement.join() + "\n";
+        historycontent +=  + "\n";
       });
-      console.log(this.$store.state.dbHistory);
       var a = document.createElement("a");
       let filename = "export.csv";
       let contentType = "application/csv;charset=utf-8;";
@@ -110,13 +84,36 @@ export default {
       a.click();
       document.body.removeChild(a);
     },
-
+    showJournals: function () {
+      let historycontent = "epoch,gl,concept,account,ccy, amount,balance\n";
+      Object.keys(this.$store.state.dbJournal).forEach((key) => {
+        let journal = this.$store.state.dbJournal[key]
+        //console.log("Journal  =", journal)
+        historycontent += [
+          journal.epoch,
+          journal.gl,
+          journal.concept,
+          journal.account,
+          journal.ccy,
+          journal.dc == 'd' ? journal.amount : - journal.amount,
+          journal.balance ].join() + "\n";
+      });
+      var a = document.createElement("a");
+      let filename = "export.csv";
+      let contentType = "application/csv;charset=utf-8;";
+      a.download = filename;
+      a.href = "data:" + contentType + "," + historycontent;
+      a.target = "_blank";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    },
     runSimProxy: function (step) {
       if (this.$store.state.epoch == 0) {
         this.$store.commit("initGl", this.$store.state);
         Object.keys(rules).forEach( rule => {
           console.log("Initializing rule: " + rule)
-          rules[rule](this.$store, 0, 0 )
+          rules[rule](this.$store, "Account Initialization", 0, 0 )
         })
       }
       this.currdate = new Date(this.genesis);
@@ -141,7 +138,7 @@ export default {
               // console.log(marketdata)
               // element.Price=marketdata[this.$store.state.epoch].Price
             }
-            rules[element.Event](this.$store, element.EventAmount, price);
+            rules[element.Event](this.$store, element.Item, element.EventAmount, price);
             console.log(
               element.Item +
                 " / " +

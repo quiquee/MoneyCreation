@@ -21,10 +21,11 @@ export const coa = {
 
 export const rules = {
 
-  PublicSale: function (store, amt, price) {
+  PublicSale: function (store, concept, amt, price) {
     // Accounting in the DAO amount is in tokens
     store.commit("gl", {
       gl: "pleidao",
+      concept: concept,
       debitccy: "PLEI",
       debit: "Tokens",
       debitamt: amt,
@@ -36,6 +37,7 @@ export const rules = {
     // Community
     store.commit("gl", {
       gl: "community",
+      concept: concept,
       debitccy: "USDC",
       debit: "PL",
       debitamt: amt * market(price),
@@ -44,10 +46,11 @@ export const rules = {
       creditamt: amt,
     });
   },
-  PrivateSale: function (store, amt, price) {
+  PrivateSale: function (store,concept, amt, price) {
     // Accounting in the DAO amount is in tokens
     store.commit("gl", {
       gl: "pleidao",
+      concept: concept,
       debitccy: "PLEI",
       debit: "Tokens",
       debitamt: amt,
@@ -58,6 +61,7 @@ export const rules = {
     // Investors
     store.commit("gl", {
       gl: "investors",
+      concept: concept,
       debitccy: "USDC",
       debit: "Cash",
       debitamt: amt * market(price),
@@ -66,10 +70,11 @@ export const rules = {
       creditamt: amt,
     });
   },
-  Dividends: function (store, amt, price) {
+  Dividends: function (store,concept, amt, price) {
     // Accounting in the team
     store.commit("gl", {
       gl: "plei",
+      concept: concept,
       credit: "Tokens",
       creditccy: "PLEI",
       creditamt: amt,
@@ -80,6 +85,7 @@ export const rules = {
     // Accounting in the DAO
     store.commit("gl", {
       gl: "pleidao",
+      concept: concept,
       creditccy: "PLEI",
       creditamt: amt,
       credit: "Equity",
@@ -89,10 +95,11 @@ export const rules = {
     });
   },
 
-  Buyback: function (store, amt, price) {
+  Buyback: function (store,concept, amt, price) {
     // Accounting in the DAO
     store.commit("gl", {
       gl: "treasury",
+      concept: concept,
       debit: "Cash",
       debitccy: "USDC",
       debitamt: amt * market(price),
@@ -103,6 +110,7 @@ export const rules = {
     // COMMUNITY
     store.commit("gl", {
       gl: "community",
+      concept: concept,
       credit: "Cash",
       creditccy: "USDC",
       creditamt: amt * market(price),
@@ -111,11 +119,12 @@ export const rules = {
       debitamt: amt,
     });
   },
-  PrivateStaking: function (store, amt, price) {
+  PrivateStaking: function (store,concept, amt, price) {
     amt = derive(store,amt)
     // Accounting for Investors
     store.commit("gl", {
       gl: "investors",
+      concept: concept,
       debit: "Tokens",
       debitccy: "PLEI",
       debitamt: amt ,
@@ -126,6 +135,7 @@ export const rules = {
     // Accounting in Treasury
     store.commit("gl", {
       gl: "treasury",
+      concept: concept,
       credit: "Stake",
       creditccy: "PLEI",
       creditamt: amt ,
@@ -134,11 +144,12 @@ export const rules = {
       debitamt: amt,
     });
   },
-  Revenue: function (store, amt, price) {
+  Revenue: function (store,concept, amt, price) {
     amt = derive(store,amt)
     // Accounting in Treasury
     store.commit("gl", {
       gl: "treasury",
+      concept: concept,
       credit: "Cash",
       creditccy: "USDC",
       creditamt: amt ,
