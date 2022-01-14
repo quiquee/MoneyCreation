@@ -13,7 +13,7 @@
 
       <div class="speed">
         Lag between updates:
-        <v-slider v-model="speed" hint="Speed" max="1000" min="10"></v-slider>
+        <v-slider v-model="speed" hint="Speed" max="1000" min="0"></v-slider>
       </div>
 
       <h3>
@@ -21,7 +21,7 @@
         {{ totalMoney }}
       </h3>
       Amounts are in Millions<p></p>
-      <div class="cards">
+      <!-- div class="cards">
         <div class="cards">
           <Ledger title="Treasury" gl="treasury" />
           
@@ -38,8 +38,9 @@
         <div class="cards">
           <Ledger title="Plei Team" gl="plei" />
         </div>
-      </div>
-      <line-chart :chart-data="chartdata"></line-chart>
+         <line-chart :chart-data="chartdata"></line-chart>
+      </div-->
+     <Schedule></Schedule>
     </div>
   </v-app>
 </template>
@@ -50,12 +51,14 @@ import { rules } from "./rules.js";
 import { marketdata } from "./market.js";
 import LineChart from "./gchart";
 import { schedule } from "./schedule.js";
+import Schedule from "./components/Schedule";
 
 export default {
   name: "app",
   components: {
     Ledger,
     LineChart,
+    Schedule
   },
   data() {
     return {
@@ -70,12 +73,12 @@ export default {
   },
   methods: {
     showHistory: function () {
-      let historycontent = "epoch,gl,concept,account,ccy,amount\n";
+      let historycontent = "epoch,gl,account,ccy,amount\n";
       this.$store.state.dbHistory.forEach((histElement) => {
-        historycontent +=  + "\n";
+        historycontent += histElement.join() + "\n";
       });
       var a = document.createElement("a");
-      let filename = "export.csv";
+      let filename = "SimResults.csv";
       let contentType = "application/csv;charset=utf-8;";
       a.download = filename;
       a.href = "data:" + contentType + "," + historycontent;
@@ -96,10 +99,10 @@ export default {
           journal.account,
           journal.ccy,
           journal.dc == 'd' ? journal.amount : - journal.amount,
-          journal.balance ].join() + "\n";
+          journal.balance].join() + "\n";
       });
       var a = document.createElement("a");
-      let filename = "export.csv";
+      let filename = "SimJournals.csv";
       let contentType = "application/csv;charset=utf-8;";
       a.download = filename;
       a.href = "data:" + contentType + "," + historycontent;
@@ -117,8 +120,8 @@ export default {
         })
       }
       this.currdate = new Date(this.genesis);
-      this.currdate.setMonth(
-        this.currdate.getMonth() + this.$store.state.epoch
+      this.currdate.setDate(
+        this.currdate.getDate() + this.$store.state.epoch
       );
       var current = this.currdate.getTime();
 
@@ -126,9 +129,13 @@ export default {
         [...schedule].forEach((element) => {
           var start = new Date(Date.parse(element["Start Date"])).getTime();
           var end = new Date(Date.parse(element["End Date"])).getTime();
+          
+          /* THIS IS NEEDED FOR MONTHLY 
           if (start == end) {
+            
             end = start + 2628000000;
           }
+          */
           //console.log("Check " + element.Item)
           var price = element.Price;
           if (start <= current && current <= end) {
@@ -152,7 +159,7 @@ export default {
         });
         this.$store.commit("saveHist", this.$store.state);
         this.$store.commit("dawn");
-        if (step && this.$store.state.epoch <= 70) {
+        if (step && this.$store.state.epoch <= 31*70) {
           setTimeout(() => {
             this.runSimProxy(step);
           }, this.speed);

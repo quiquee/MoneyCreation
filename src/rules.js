@@ -119,6 +119,19 @@ export const rules = {
       debitamt: amt,
     });
   },
+  TreasuryDrop: function (store,concept, amt, price) {
+    // Accounting in the DAO
+    store.commit("gl", {
+      gl: "treasury",
+      concept: concept,
+      debit: "Cash",
+      debitccy: "USDC",
+      debitamt: amt * market(price),
+      credit: "Tokens",
+      creditccy: "PLEI",
+      creditamt: amt,
+    });
+  },
   PrivateStaking: function (store,concept, amt, price) {
     amt = derive(store,amt)
     // Accounting for Investors
